@@ -72,7 +72,7 @@ class Pantalla_Aniadir_Lista_Personas(Screen):
 
     def add_person(self, instance): 
         nombre = self.name_input.text.strip()
-        cont_regalos = self.regalos_cont_input.text.stri()
+        cont_regalos = self.regalos_cont_input.text.strip()
         
         if nombre and cont_regalos.isdigit():
             cont_regalos = int(cont_regalos)
@@ -84,6 +84,17 @@ class Pantalla_Aniadir_Lista_Personas(Screen):
 
             add_gift_button = Button(text = "+1 Regalo", size_hint_x = 0.2)
             add_gift_button.bind (on_press = lambda btn: self.update_progress(barra_progreso))
+
+            personas_layout.add_widget(nombre_label)
+            personas_layout.add_widget(barra_progreso)
+            personas_layout.add_widget(add_gift_button)
+            self.lista_personas.add_widget(personas_layout)
+            self.name_input.text = " "
+            self.regalos_cont_input.text = ""
+        
+    def update_progress(self, barra_progreso): 
+        if barra_progreso.value < barra_progreso.max: 
+            barra_progreso.value += 1
 
 
     def CambiarVolver(self, instance):
