@@ -102,7 +102,6 @@ class Pantalla_Aniadir_Lista_Personas(Screen):
         if barra_progreso.value < barra_progreso.max: 
             barra_progreso.value += 1
 
-
     def CambiarVolver(self, instance):
         self.manager.current = "inicio"
 
@@ -179,35 +178,75 @@ class Editar_Personas(Screen):
         boton_volver.bind(on_press = self.CambiarVolver)
         self.layout.add_widget(boton_volver)
 
-    def set_person_name(self, name): 
+    def set_person_name(self, name):
         self.persona_label.text = f"Regalos para {name}"
         self.checklist.clear_widgets()
+
+        if storage.exists(name):
+            regalos = storage.get(name)['regalos']
+            for regalo in regalos:
+                if isinstance(regalo, dict):
+                    gift_layout = self.create_gift_widget(regalo["nombre"], regalo.get("marcado", False))
+                else:
+                    gift_layout = self.create_gift_widget(regalo, False)
+                self.checklist.add_widget(gift_layout)
+
+    def create_gift_widget(self, gift_text, marcado):
+        gift_layout = BoxLayout(size_hint_y=None, height=40, spacing=10)
+
+        checkbox = CheckBox(size_hint_x=0.1, active=marcado)
+        checkbox.bind(on_release=lambda cb: self.update_gift_status(gift_text, cb.active))
+
+        regalo_label = Label(text=gift_text, size_hint_x=0.8, color=(0, 0, 0, 1))
+        delete_button = Button(text="Eliminar", size_hint_x=0.1)
+        delete_button.bind(on_press=lambda btn: self.remove_gift(gift_layout, gift_text))
+
+        gift_layout.add_widget(checkbox)
+        gift_layout.add_widget(regalo_label)
+        gift_layout.add_widget(delete_button)
+        return gift_layout
+
+    def update_gift_status(self, gift_text, marcado):
+        persona = self.persona_label.text.replace("Regalos para ", "").strip()
+        if storage.exists(persona):
+            regalos = storage.get(persona)['regalos']
+            for regalo in regalos:
+                if isinstance(regalo, dict) and regalo["nombre"] == gift_text:
+                    regalo["marcado"] = marcado
+                    break
+            storage.put(persona, regalos=regalos)
+
+    def add_item(self, instance):
+        gift_text = self.regalo_input.text.strip()
+
+        if gift_text:
+            persona = self.persona_label.text.replace("Regalos para ", "").strip()
+
+            gift_layout = self.create_gift_widget(gift_text, False)
+            self.checklist.add_widget(gift_layout)
+
+            if not storage.exists(persona):
+                storage.put(persona, regalos=[])
+            regalos = storage.get(persona)['regalos']
+            regalos.append({"nombre": gift_text, "marcado": False})
+            storage.put(persona, regalos=regalos)
+
+            self.regalo_input.text = ""
+
+    def remove_gift(self, item_layout, gift_text):
+        self.checklist.remove_widget(item_layout)
+
+        persona = self.persona_label.text.replace("Regalos para ", "").strip()
+        if storage.exists(persona):
+            regalos = storage.get(persona)['regalos']
+            regalos = [regalo for regalo in regalos if isinstance(regalo, dict) and regalo["nombre"] != gift_text]
+            storage.put(persona, regalos=regalos)
 
     def CambiarVolver(self, instance):
         app = App.get_running_app()
         app.root.transition = SlideTransition(direction="right")
         app.root.current = "AddPerson"
 
-    def add_item(self, instance): 
-
-        gift_text = self.regalo_input.text.strip()
-
-        if gift_text: 
-            
-            gift_layout = BoxLayout(size_hint_y = None, height = 40, spacing = 10)
-            checkbox = CheckBox(size_hint_x =0.1)
-            regalo_label = Label(text = gift_text, size_hint_x = 0.8, color = (0,0,0,1))
-            delete_button = Button(text = "Eliminar", size_hint_x = 0.1)
-            delete_button.bind(on_press = lambda btn: self.remove_gift(gift_layout))
-
-            gift_layout.add_widget(checkbox)
-            gift_layout.add_widget(regalo_label)
-            gift_layout.add_widget(delete_button)
-            self.checklist.add_widget(gift_layout)
-            self.regalo_input.text = " "
-
-    def remove_gift(self, item_layout): 
-        self.checklist.remove_widget(item_layout)
 
 
 class Lista_Regalos(App):
