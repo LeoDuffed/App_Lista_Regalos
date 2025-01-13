@@ -1,6 +1,4 @@
 #Creado por Leonardo Martinez Peña
-# Iniciado el 16/12/2024
-# Finalizado el ...
 
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
