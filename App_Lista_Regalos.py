@@ -29,10 +29,17 @@ class Pantalla_Inicio(Screen):
         boton_pantalla_personas.bind(on_press = self.CambiarPersonas)
         layout.add_widget(boton_pantalla_personas)
 
+        boton_agregar_personas = Button(text = "Agrega personas",pos_hint = {"center_x": 0.5}, background_color = (0.5,1,0,1) )
+        boton_agregar_personas.bind(on_press = self.Cambiar_Agregar_Peronas)
+        layout.add_widget(boton_agregar_personas)
+
         self.add_widget(layout)
 
     def CambiarPersonas(self, instance):
         self.manager.current = 'listaIni'
+
+    def Cambiar_Agregar_Peronas(self, instance):
+        self.manager.current = 'AddPerson'
 
                                          
 
@@ -76,7 +83,7 @@ class Pantalla_Aniadir_Lista_Personas(Screen):
             cont_regalos = int(cont_regalos)
             personas_layout = BoxLayout(size_hint_y = None, height = 50, spacing = 10)
 
-            nombre_label = Label(text = nombre, size_hint_x = 0.3)
+            nombre_label = Label(text = nombre, size_hint_x = 0.3, color = (0,0,0,1))
 
             barra_progreso = ProgressBar(max = cont_regalos, size_hint_x = 0.3)
 
@@ -97,15 +104,34 @@ class Pantalla_Aniadir_Lista_Personas(Screen):
 
     def CambiarVolver(self, instance):
         self.manager.current = "inicio"
-    
 
-class ListaRegalos(App):
+class Personas_Regalos(Screen):
+    def __init__(self, **kw):
+        super().__init__(**kw)
+
+        self.layout = BoxLayout(orientation = 'vertical', padding = 20, spacing = 10)
+
+        instruction_label = Label (text = "Agrega a las personas", font_size = '25sp', color = (0,0,0,1))
+        self.layout.add_widget(instruction_label)
+
+        boton_volver = Button(text = "Volver", pos_hint = {"center_x":0.5}, background_color = (1, 0.7, 0.8, 1))
+        boton_volver.bind(on_press = self.CambiarVolver)
+        self.layout.add_widget(boton_volver)
+
+        self.add_widget(self.layout)
+
+    def CambiarVolver(self, instance): 
+        self.manager.current = 'listaIni'
+
+
+class Lista_Regalos(App):
     def build(self):
         
         sm = ScreenManager()
         sm.add_widget(Pantalla_Inicio(name = 'inicio'))
         sm.add_widget(Pantalla_Aniadir_Lista_Personas(name = 'listaIni'))
+        sm.add_widget(Personas_Regalos(name = 'AddPerson'))
         return sm
 
 
-ListaRegalos().run()
+Lista_Regalos().run()
