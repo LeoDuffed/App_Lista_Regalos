@@ -12,6 +12,8 @@ from kivy.uix.checkbox import CheckBox
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.popup import Popup
 from kivy.storage.jsonstore import JsonStore
+from kivy.base import EventLoop
+from kivy.utils import platform
 from kivy.core.window import Window
 
 storage = JsonStore("lista_regalos.jason")
@@ -100,8 +102,7 @@ class Pantalla_Presupuesto(Screen):
         welcome_label = Label(text = "Mantengase al dia con su presupuesto", font_size = '30sp', color = (0,0,0,1))
         self.layout.add_widget(welcome_label)
 
-        self.presupuesto_inicial = Label(text = "", font_size = '20sp', color = (0,0,0,1), halign = 'center', size_hint = (1, None), height = 30)
-        self.presupuesto_inicial.bind(size = self.presupuesto_inicial.setter('text_size'))
+        self.presupuesto_inicial = Label(text = "", font_size = '20sp', color = (0,0,0,1), halign = 'center')
         self.layout.add_widget(self.presupuesto_inicial)
 
         self.budget_track_label = Label(text = "", font_size = '25sp', color = (0,0,0,1), halign = 'center', size_hint = (1, None), height = 30)
@@ -121,10 +122,6 @@ class Pantalla_Presupuesto(Screen):
         input_gasto_layout.add_widget(self.gasto_input)
         input_gasto_layout.add_widget(add_gasto_button)
         self.layout.add_widget(input_gasto_layout) 
-
-        boton_volver = Button(text = "Volver", pos_hint = {"center_x":0.5}, background_color = (1, 0.7, 0.8, 1))
-        boton_volver.bind(on_press = self.Cambiar_Volver)
-        self.layout.add_widget(boton_volver)
 
         self.add_widget(self.layout)
 
@@ -178,8 +175,9 @@ class Pantalla_Presupuesto(Screen):
     def update_budget_label(self, budget): 
         self.budget_track_label.text = f"Presupuesto: ${budget:.2f}"
 
-    def Cambiar_Volver(self, instance):
-        self.manager.current = "inicio"
+    def on_touch_move(self, touch): 
+        if touch.dx > 50: 
+            self.manager.current = 'inicio'
 
 
 class Pantalla_Aniadir_Lista_Personas(Screen):
@@ -207,10 +205,6 @@ class Pantalla_Aniadir_Lista_Personas(Screen):
         input_data.add_widget(self.regalos_cont_input)
         input_data.add_widget(add_person_button)
         layout.add_widget(input_data)
-
-        boton_volver = Button(text = "Volver", pos_hint = {"center_x":0.5}, background_color = (1, 0.7, 0.8, 1))
-        boton_volver.bind(on_press = self.CambiarVolver)
-        layout.add_widget(boton_volver)
 
         self.add_widget(layout)
 
@@ -294,8 +288,9 @@ class Pantalla_Aniadir_Lista_Personas(Screen):
                     break
             storage.put("personas", lista=personas)
 
-    def CambiarVolver(self, instance):
-        self.manager.current = "inicio"
+    def on_touch_move(self, touch): 
+        if touch.dx > 50: 
+            self.manager.current = 'inicio'
 
 
 class Personas_Regalos_Main_Screen(Screen):
@@ -320,10 +315,6 @@ class Personas_Regalos_Main_Screen(Screen):
         input_area.add_widget(add_person_button)
         self.layout.add_widget(input_area)
 
-        boton_volver = Button(text = "Volver", pos_hint = {"center_x":0.5}, background_color = (1, 0.7, 0.8, 1))
-        boton_volver.bind(on_press = self.CambiarVolver)
-        self.layout.add_widget(boton_volver)
-
         self.add_widget(self.layout)
     
         self.load_personas()
@@ -339,9 +330,6 @@ class Personas_Regalos_Main_Screen(Screen):
         persona_button = Button(text = nombre, size_hint_y = None, height = 50)
         persona_button.bind(on_press = lambda btn: self.open_person_screen(nombre))
         self.lista_personas.add_widget(persona_button)
-
-    def CambiarVolver(self, instance): 
-        self.manager.current = 'inicio'
     
     def add_person(self, instance):
         nombre = self.nombre_input.text.strip()
@@ -357,6 +345,10 @@ class Personas_Regalos_Main_Screen(Screen):
         persona_screen.set_person_name(nombre)
         app.root.transition = SlideTransition(direction = "left")
         app.root.current = 'person_screen'
+    
+    def on_touch_move(self, touch): 
+        if touch.dx > 50: 
+            self.manager.current = 'inicio'
 
 
 class Editar_Personas(Screen):
@@ -381,10 +373,6 @@ class Editar_Personas(Screen):
         input_area.add_widget(self.regalo_input)
         input_area.add_widget(agreagar_button)
         self.layout.add_widget(input_area)
-
-        boton_volver = Button(text = "Volver", pos_hint = {"center_x":0.5}, background_color = (1, 0.7, 0.8, 1))
-        boton_volver.bind(on_press = self.CambiarVolver)
-        self.layout.add_widget(boton_volver)
 
     def set_person_name(self, name):
         self.persona_label.text = f"Regalos para {name}"
@@ -449,11 +437,10 @@ class Editar_Personas(Screen):
             regalos = storage.get(persona)['regalos']
             regalos = [regalo for regalo in regalos if isinstance(regalo, dict) and regalo["nombre"] != gift_text]
             storage.put(persona, regalos=regalos)
-
-    def CambiarVolver(self, instance):
-        app = App.get_running_app()
-        app.root.transition = SlideTransition(direction="right")
-        app.root.current = "AddPerson"
+    
+    def on_touch_move(self, touch): 
+        if touch.dx > 50: 
+            self.manager.current = 'AddPerson'
 
 
 class Lista_Regalos(App):
@@ -465,7 +452,19 @@ class Lista_Regalos(App):
         sm.add_widget(Pantalla_Aniadir_Lista_Personas(name = 'listaIni'))
         sm.add_widget(Personas_Regalos_Main_Screen(name = 'AddPerson'))
         sm.add_widget(Editar_Personas(name = 'person_screen'))
+
+        if platform == 'android': 
+            EventLoop.window.bind(on_keyboard = self.android_back_button)
+
         return sm
+    def android_back_button(self, window, key, *args): 
+        if key == 27: 
+            screen_manager = self.root
+            if screen_manager.current != 'inicio': 
+                screen_manager.current = 'inicio'
+                return True
+            return False
+
     
     def on_stop(self):
         return super().on_stop()
