@@ -86,18 +86,85 @@ class Pantalla_Inicio(Screen):
     def Cambiar_Agregar_Peronas(self, instance):
         self.manager.current = 'AddPerson'
                             
-                            
+
 class Pantalla_Presupuesto(Screen): 
     def __init__(self, **kw): 
         super().__init__(**kw)
 
         self.layout = BoxLayout(orientation = 'vertical', padding= 10, spacing = 10)
 
+        welcome_label = Label(text = "Mantengase al dia con su presupuesto", font_size = '30sp', color = (0,0,0,1))
+        self.layout.add_widget(welcome_label)
+
+        self.budget_track_label = Label(text = "", font_size = '25sp', color = (0,0,0,1))
+        self.layout.add_widget(self.budget_track_label)
+
+        input_budget = BoxLayout(size_hint = (1, 0.2), spacing = 10)
+        self.budget_input = TextInput(hint_text = "Ingrese su presupuesto", multiline = False)
+        add_budget_button = Button(text = "Añadir presupuesto", on_press = self.add_presupuesto)
+        input_budget.add_widget(self.budget_input)
+        input_budget.add_widget(add_budget_button)
+        self.layout.add_widget(input_budget)
+
+        input_gasto_layout = BoxLayout(size_hint = (1, 0.2), spacing = 10)
+        self.gasto_input = TextInput(hint_text = "Ingrese lo gastado", multiline = False)
+        add_gasto_button = Button(text = "Agrega gasto", on_press = self.sub_gasto)
+        input_gasto_layout.add_widget(self.gasto_input)
+        input_gasto_layout.add_widget(add_gasto_button)
+        self.layout.add_widget(input_gasto_layout) 
+
         boton_volver = Button(text = "Volver", pos_hint = {"center_x":0.5}, background_color = (1, 0.7, 0.8, 1))
         boton_volver.bind(on_press = self.Cambiar_Volver)
         self.layout.add_widget(boton_volver)
 
         self.add_widget(self.layout)
+
+        self.load_budget(self)
+
+    def add_presupuesto(self, instance): 
+
+        try: 
+            budget = float(self.budget_input.text)
+        except ValueError: 
+            self.budget_track_label.text = "Error: Ingrese un numero valido"
+            return 
+        
+        storage.put("budget", total = budget)
+        self.update_budget_label(budget)
+
+        self.budget_input.text = " "
+        
+    def sub_gasto(self, instance): 
+
+        try: 
+            gasto = float(self.gasto_input.text)
+        except ValueError: 
+            self.budget_track_label.text = "Error: Ingrese un numero valido"
+            return 
+
+        if storage.exists("budget"): 
+            budget = storage.get("budget")["total"]
+        else: 
+            budget = 0
+
+        if gasto > budget: 
+            self.budget_track_label.text = "Se acabo tu presupuesto"
+        else: 
+            budget -= gasto
+            storage.put("budget", total = budget)
+            self.update_budget_label(budget)
+
+        self.gasto_input.text = ""
+
+    def load_budget(self, instance): 
+        if storage.exists("budget"): 
+            budget = storage.get("budget")["total"]
+        else: 
+            budget = 0
+        self.update_budget_label(budget)
+
+    def update_budget_label(self, budget): 
+        self.budget_track_label.text = f"Presupuesto: ${budget:.2f}"
 
     def Cambiar_Volver(self, instance):
         self.manager.current = "inicio"
