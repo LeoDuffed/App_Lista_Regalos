@@ -17,6 +17,7 @@ from kivy.core.window import Window
 
 storage = JsonStore("lista_regalos.jason")
 
+
 class Pantalla_Inicio(Screen):
     def __init__(self, **kawargs):
         super().__init__(**kawargs)
@@ -42,6 +43,7 @@ class Pantalla_Inicio(Screen):
     def Cambiar_Agregar_Peronas(self, instance):
         self.manager.current = 'AddPerson'
                             
+
 class Pantalla_Aniadir_Lista_Personas(Screen):
     def __init__(self, **k):
         super().__init__(**k)
@@ -132,6 +134,7 @@ class Pantalla_Aniadir_Lista_Personas(Screen):
     def CambiarVolver(self, instance):
         self.manager.current = "inicio"
 
+
 class Personas_Regalos_Main_Screen(Screen):
     def __init__(self, **kw):
         super().__init__(**kw)
@@ -166,7 +169,7 @@ class Personas_Regalos_Main_Screen(Screen):
         for persona in storage.keys(): 
             if persona == "personas": 
                 continue
-            
+
             self.add_person_to_list(persona)
 
     def add_person_to_list(self, nombre): 
@@ -191,6 +194,7 @@ class Personas_Regalos_Main_Screen(Screen):
         persona_screen.set_person_name(nombre)
         app.root.transition = SlideTransition(direction = "left")
         app.root.current = 'person_screen'
+
 
 class Editar_Personas(Screen):
     def __init__(self, **kw): 
@@ -287,7 +291,6 @@ class Editar_Personas(Screen):
         app = App.get_running_app()
         app.root.transition = SlideTransition(direction="right")
         app.root.current = "AddPerson"
-
 
 
 class Lista_Regalos(App):
