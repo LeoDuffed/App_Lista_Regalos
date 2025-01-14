@@ -1,1 +1,1 @@
-{"Leonardo": {"regalos": [{"nombre": "lego", "marcado": true}]}, "Juls": {"regalos": []}, "Leoanrdo": {"regalos": [{"nombre": "leche", "marcado": true}]}}
+{"Leonardo": {"regalos": [{"nombre": "lego", "marcado": true}, {"nombre": "ropa", "marcado": false}]}, "Juls": {"regalos": [{"nombre": "libro", "marcado": true}, {"nombre": "khgjhgdfhjgtdf", "marcado": false}]}, "Leoanrdo": {"regalos": [{"nombre": "leche", "marcado": true}]}}
