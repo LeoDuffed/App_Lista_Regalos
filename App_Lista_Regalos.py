@@ -41,9 +41,7 @@ class Pantalla_Inicio(Screen):
 
     def Cambiar_Agregar_Peronas(self, instance):
         self.manager.current = 'AddPerson'
-
-                                         
-
+                            
 class Pantalla_Aniadir_Lista_Personas(Screen):
     def __init__(self, **k):
         super().__init__(**k)
@@ -76,31 +74,60 @@ class Pantalla_Aniadir_Lista_Personas(Screen):
 
         self.add_widget(layout)
 
-    def add_person(self, instance): 
+        self.load_personas()
+
+    def add_person(self, instance):
         nombre = self.name_input.text.strip()
         cont_regalos = self.regalos_cont_input.text.strip()
-        
+
         if nombre and cont_regalos.isdigit():
             cont_regalos = int(cont_regalos)
-            personas_layout = BoxLayout(size_hint_y = None, height = 50, spacing = 10)
 
-            nombre_label = Label(text = nombre, size_hint_x = 0.3, color = (0,0,0,1))
-
-            barra_progreso = ProgressBar(max = cont_regalos, size_hint_x = 0.3)
-
-            add_gift_button = Button(text = "+1 Regalo", size_hint_x = 0.2)
-            add_gift_button.bind (on_press = lambda btn: self.update_progress(barra_progreso))
-
-            personas_layout.add_widget(nombre_label)
-            personas_layout.add_widget(barra_progreso)
-            personas_layout.add_widget(add_gift_button)
+            personas_layout = self.create_person_layout(nombre, cont_regalos, 0)  
             self.lista_personas.add_widget(personas_layout)
-            self.name_input.text = " "
+
+            if not storage.exists("personas"):
+                storage.put("personas", lista=[])
+            personas = storage.get("personas")["lista"]
+            personas.append({"nombre": nombre, "max_regalos": cont_regalos, "progreso": 0})
+            storage.put("personas", lista=personas)
+
+            self.name_input.text = ""
             self.regalos_cont_input.text = ""
-        
-    def update_progress(self, barra_progreso): 
-        if barra_progreso.value < barra_progreso.max: 
+
+    def load_personas(self):
+        if storage.exists("personas"):
+            personas = storage.get("personas")["lista"]
+            for persona in personas:
+                personas_layout = self.create_person_layout(
+                    persona["nombre"], persona["max_regalos"], persona["progreso"]
+                )
+                self.lista_personas.add_widget(personas_layout)
+
+    def create_person_layout(self, nombre, max_regalos, progreso):
+        personas_layout = BoxLayout(size_hint_y=None, height=50, spacing=10)
+
+        nombre_label = Label(text=nombre, size_hint_x=0.3, color=(0, 0, 0, 1))
+        barra_progreso = ProgressBar(max=max_regalos, value=progreso, size_hint_x=0.3)
+        add_gift_button = Button(text="+1 Regalo", size_hint_x=0.2)
+        add_gift_button.bind(on_press=lambda btn: self.update_progress(barra_progreso, nombre))
+
+        personas_layout.add_widget(nombre_label)
+        personas_layout.add_widget(barra_progreso)
+        personas_layout.add_widget(add_gift_button)
+
+        return personas_layout
+
+    def update_progress(self, barra_progreso, nombre):
+        if barra_progreso.value < barra_progreso.max:
             barra_progreso.value += 1
+
+            personas = storage.get("personas")["lista"]
+            for persona in personas:
+                if persona["nombre"] == nombre:
+                    persona["progreso"] = barra_progreso.value
+                    break
+            storage.put("personas", lista=personas)
 
     def CambiarVolver(self, instance):
         self.manager.current = "inicio"
@@ -137,6 +164,9 @@ class Personas_Regalos_Main_Screen(Screen):
 
     def load_personas(self): 
         for persona in storage.keys(): 
+            if persona == "personas": 
+                continue
+            
             self.add_person_to_list(persona)
 
     def add_person_to_list(self, nombre): 
