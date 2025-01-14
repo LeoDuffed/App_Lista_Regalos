@@ -86,6 +86,7 @@ class Pantalla_Inicio(Screen):
     def Cambiar_Agregar_Peronas(self, instance):
         self.manager.current = 'AddPerson'
                             
+                            
 class Pantalla_Presupuesto(Screen): 
     def __init__(self, **kw): 
         super().__init__(**kw)
