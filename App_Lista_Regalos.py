@@ -32,6 +32,10 @@ class Pantalla_Inicio(Screen):
         welcomerLabel = Label (text = "Tus listas de regalos", font_size = '30sp', color = (0,0,0,1))
         layout.add_widget(welcomerLabel)
 
+        boton_pantalla_presupuesto = Button(text = "Tu presupuesto", pos_hint = {"center_x": 0.5}, background_color = (0.5,1,0,1))
+        boton_pantalla_presupuesto.bind(on_press = self.Cambiar_Presupuesto)
+        layout.add_widget(boton_pantalla_presupuesto)
+
         boton_pantalla_personas = Button(text = "Inicia tu lista", pos_hint = {"center_x": 0.5}, background_color = (0.5,1,0,1))
         boton_pantalla_personas.bind(on_press = self.CambiarPersonas)
         layout.add_widget(boton_pantalla_personas)
@@ -72,6 +76,9 @@ class Pantalla_Inicio(Screen):
         for screen in app.root.screens:
             if hasattr(screen, "lista_personas"):
                 screen.lista_personas.clear_widgets()
+    
+    def Cambiar_Presupuesto(self, instance): 
+        self.manager.current = 'presupuesto'
                 
     def CambiarPersonas(self, instance):
         self.manager.current = 'listaIni'
@@ -79,6 +86,21 @@ class Pantalla_Inicio(Screen):
     def Cambiar_Agregar_Peronas(self, instance):
         self.manager.current = 'AddPerson'
                             
+class Pantalla_Presupuesto(Screen): 
+    def __init__(self, **kw): 
+        super().__init__(**kw)
+
+        self.layout = BoxLayout(orientation = 'vertical', padding= 10, spacing = 10)
+
+        boton_volver = Button(text = "Volver", pos_hint = {"center_x":0.5}, background_color = (1, 0.7, 0.8, 1))
+        boton_volver.bind(on_press = self.Cambiar_Volver)
+        self.layout.add_widget(boton_volver)
+
+        self.add_widget(self.layout)
+
+    def Cambiar_Volver(self, instance):
+        self.manager.current = "inicio"
+
 
 class Pantalla_Aniadir_Lista_Personas(Screen):
     def __init__(self, **k):
@@ -359,6 +381,7 @@ class Lista_Regalos(App):
         
         sm = ScreenManager()
         sm.add_widget(Pantalla_Inicio(name = 'inicio'))
+        sm.add_widget(Pantalla_Presupuesto(name = 'presupuesto'))
         sm.add_widget(Pantalla_Aniadir_Lista_Personas(name = 'listaIni'))
         sm.add_widget(Personas_Regalos_Main_Screen(name = 'AddPerson'))
         sm.add_widget(Editar_Personas(name = 'person_screen'))
