@@ -76,6 +76,9 @@ class Pantalla_Inicio(Screen):
         for screen in app.root.screens:
             if hasattr(screen, "lista_personas"):
                 screen.lista_personas.clear_widgets()
+
+        presupuesto_screen = app.root.get_screen('presupuesto')
+        presupuesto_screen.load_budget(None)
     
     def Cambiar_Presupuesto(self, instance): 
         self.manager.current = 'presupuesto'
@@ -96,7 +99,12 @@ class Pantalla_Presupuesto(Screen):
         welcome_label = Label(text = "Mantengase al dia con su presupuesto", font_size = '30sp', color = (0,0,0,1))
         self.layout.add_widget(welcome_label)
 
-        self.budget_track_label = Label(text = "", font_size = '25sp', color = (0,0,0,1))
+        self.presupuesto_inicial = Label(text = "", font_size = '20sp', color = (0,0,0,1), halign = 'center', size_hint = (1, None), height = 30)
+        self.presupuesto_inicial.bind(size = self.presupuesto_inicial.setter('text_size'))
+        self.layout.add_widget(self.presupuesto_inicial)
+
+        self.budget_track_label = Label(text = "", font_size = '25sp', color = (0,0,0,1), halign = 'center', size_hint = (1, None), height = 30)
+        self.budget_track_label.bind(size = self.budget_track_label.setter('text_size'))
         self.layout.add_widget(self.budget_track_label)
 
         input_budget = BoxLayout(size_hint = (1, 0.2), spacing = 10)
@@ -125,14 +133,13 @@ class Pantalla_Presupuesto(Screen):
 
         try: 
             budget = float(self.budget_input.text)
+            storage.put("budget", total = budget, initial = budget)
+            self.presupuesto_inicial.text = f"Presupuesto inicial: ${budget}"
+            self.update_budget_label(budget)
+            self.budget_input.text = ""
         except ValueError: 
             self.budget_track_label.text = "Error: Ingrese un numero valido"
             return 
-        
-        storage.put("budget", total = budget)
-        self.update_budget_label(budget)
-
-        self.budget_input.text = " "
         
     def sub_gasto(self, instance): 
 
@@ -158,10 +165,14 @@ class Pantalla_Presupuesto(Screen):
 
     def load_budget(self, instance): 
         if storage.exists("budget"): 
-            budget = storage.get("budget")["total"]
+            data = storage.get("budget")
+            initial_budget = data.get("initial","Presupuesto inicial no definido")
+            total_budget = data["total"]
+            self.presupuesto_inicial.text = f"Presupuesto incial: ${initial_budget}"
+            self.update_budget_label(total_budget)
         else: 
-            budget = 0
-        self.update_budget_label(budget)
+            self.presupuesto_inicial.text = "Presupuesto inicial no definido"
+            self.update_budget_label(0)
 
     def update_budget_label(self, budget): 
         self.budget_track_label.text = f"Presupuesto: ${budget:.2f}"
