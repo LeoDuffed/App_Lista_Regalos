@@ -99,14 +99,13 @@ class Pantalla_Presupuesto(Screen):
 
         self.layout = BoxLayout(orientation = 'vertical', padding= 10, spacing = 10)
 
-        welcome_label = Label(text = "Mantengase al dia con su presupuesto", font_size = '30sp', color = (0,0,0,1))
+        welcome_label = Label(text = "Mantengase al dia\ncon su presupuesto", font_size = '30sp', color = (0,0,0,1), halign = 'center')
         self.layout.add_widget(welcome_label)
 
         self.presupuesto_inicial = Label(text = "", font_size = '20sp', color = (0,0,0,1), halign = 'center')
         self.layout.add_widget(self.presupuesto_inicial)
 
-        self.budget_track_label = Label(text = "", font_size = '25sp', color = (0,0,0,1), halign = 'center', size_hint = (1, None), height = 30)
-        self.budget_track_label.bind(size = self.budget_track_label.setter('text_size'))
+        self.budget_track_label = Label(text = "", font_size = '25sp', color = (0,0,0,1), halign = 'center')
         self.layout.add_widget(self.budget_track_label)
 
         input_budget = BoxLayout(size_hint = (1, 0.2), spacing = 10)
