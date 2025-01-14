@@ -64,7 +64,7 @@ class Pantalla_Aniadir_Lista_Personas(Screen):
         input_data = BoxLayout(size_hint = (1, 0.2), spacing = 10)
         self.name_input = TextInput(hint_text = "Nombre de la persona", multiline = False)
         self.regalos_cont_input = TextInput(hint_text = "Numero de regalos", multiline = False)
-        add_person_button = Button(text = "Añadir persona", on_press = self.add_person) # falta el add person 
+        add_person_button = Button(text = "Añadir persona", on_press = self.add_person)  
         input_data.add_widget(self.name_input)
         input_data.add_widget(self.regalos_cont_input)
         input_data.add_widget(add_person_button)
@@ -110,17 +110,31 @@ class Pantalla_Aniadir_Lista_Personas(Screen):
         personas_layout = BoxLayout(size_hint_y=None, height=50, spacing=10)
 
         nombre_label = Label(text=nombre, size_hint_x=0.3, color=(0, 0, 0, 1))
+        sub_gift_button = Button(text = "-1", size_hint_x = 0.2)
         barra_progreso = ProgressBar(max=max_regalos, value=progreso, size_hint_x=0.3)
-        add_gift_button = Button(text="+1 Regalo", size_hint_x=0.2)
-        add_gift_button.bind(on_press=lambda btn: self.update_progress(barra_progreso, nombre))
+        add_gift_button = Button(text="+1", size_hint_x=0.2)
+        sub_gift_button.bind(on_press = lambda btn: self.sub_progress(barra_progreso, nombre))
+        add_gift_button.bind(on_press=lambda btn: self.add_progress(barra_progreso, nombre))
 
         personas_layout.add_widget(nombre_label)
+        personas_layout.add_widget(sub_gift_button)
         personas_layout.add_widget(barra_progreso)
         personas_layout.add_widget(add_gift_button)
 
         return personas_layout
+    
+    def sub_progress(self, barra_progreso, nombre): 
+        if barra_progreso.value < barra_progreso.max:
+            barra_progreso.value -= 1
 
-    def update_progress(self, barra_progreso, nombre):
+            personas = storage.get("personas")["lista"]
+            for persona in personas:
+                if persona["nombre"] == nombre:
+                    persona["progreso"] = barra_progreso.value
+                    break
+            storage.put("personas", lista=personas)
+
+    def add_progress(self, barra_progreso, nombre):
         if barra_progreso.value < barra_progreso.max:
             barra_progreso.value += 1
 
