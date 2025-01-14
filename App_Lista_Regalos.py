@@ -22,7 +22,13 @@ class Pantalla_Inicio(Screen):
     def __init__(self, **kawargs):
         super().__init__(**kawargs)
 
+        main_layout = FloatLayout()
+
         layout = BoxLayout(orientation = 'vertical', padding = 20, spacing = 10)
+
+        reset_button = Button(text = "Reset", size_hint = (0.1,0.05), pos_hint = {'right': 1, 'top': 1})
+        reset_button.bind(on_release = self.reset_lists_buttons)
+        main_layout.add_widget(reset_button)
 
         welcomerLabel = Label (text = "Tus listas de regalos", font_size = '30sp', color = (0,0,0,1))
         layout.add_widget(welcomerLabel)
@@ -35,8 +41,41 @@ class Pantalla_Inicio(Screen):
         boton_agregar_personas.bind(on_press = self.Cambiar_Agregar_Peronas)
         layout.add_widget(boton_agregar_personas)
 
-        self.add_widget(layout)
+        main_layout.add_widget(layout)
 
+        self.add_widget(main_layout)
+
+    def reset_lists_buttons(self, instance): 
+        content = BoxLayout(orientation='vertical', spacing=10, padding=10)
+
+        mensaje = Label(text="¿Estás seguro de que quieres reiniciar la app?\nEsta acción borrará todos los datos.", size_hint_y=0.6)
+        content.add_widget(mensaje)
+
+        botones = BoxLayout(size_hint_y=0.4, spacing=10)
+
+        # Botón para confirmar
+        boton_confirmar = Button(text="Confirmar", background_color=(0, 1, 0, 1))
+        boton_confirmar.bind(on_press=self.reset,on_release=lambda x: popup.dismiss() )
+        botones.add_widget(boton_confirmar)
+
+        # Botón para cancelar
+        close_button = Button(text="Cancelar", background_color=(1, 0, 0, 1))
+        close_button.bind(on_release=lambda x: popup.dismiss())
+        botones.add_widget(close_button)
+
+        content.add_widget(botones)
+
+        popup = Popup(title="Reiniciar App", content=content, size_hint=(0.8, 0.4), auto_dismiss=False)
+        popup.open()
+
+    def reset(self, instance):
+        storage.clear()
+
+        app = App.get_running_app()
+        for screen in app.root.screens:
+            if hasattr(screen, "lista_personas"):
+                screen.lista_personas.clear_widgets()
+                
     def CambiarPersonas(self, instance):
         self.manager.current = 'listaIni'
 
@@ -192,7 +231,7 @@ class Personas_Regalos_Main_Screen(Screen):
         self.lista_personas.add_widget(persona_button)
 
     def CambiarVolver(self, instance): 
-        self.manager.current = 'listaIni'
+        self.manager.current = 'inicio'
     
     def add_person(self, instance):
         nombre = self.nombre_input.text.strip()
