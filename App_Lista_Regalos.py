@@ -53,12 +53,10 @@ class Pantalla_Inicio(Screen):
 
         botones = BoxLayout(size_hint_y=0.4, spacing=10)
 
-        # Botón para confirmar
         boton_confirmar = Button(text="Confirmar", background_color=(0, 1, 0, 1))
         boton_confirmar.bind(on_press=self.reset,on_release=lambda x: popup.dismiss() )
         botones.add_widget(boton_confirmar)
 
-        # Botón para cancelar
         close_button = Button(text="Cancelar", background_color=(1, 0, 0, 1))
         close_button.bind(on_release=lambda x: popup.dismiss())
         botones.add_widget(close_button)
