@@ -170,7 +170,6 @@ class Pantalla_Aniadir_Lista_Personas(Screen):
             personas = [personas for persona in personas if persona ["nombre"] != nombre]
             storage.put("personas", lista= personas)
 
-    
     def sub_progress(self, barra_progreso, nombre): 
         if barra_progreso.value < barra_progreso.max:
             barra_progreso.value -= 1
