@@ -6,7 +6,6 @@ from kivy.uix.scrollview import ScrollView
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.textinput import TextInput
-from kivy.uix.gridlayout import GridLayout
 from kivy.uix.screenmanager import ScreenManager, Screen, SlideTransition
 from kivy.uix.progressbar import ProgressBar
 from kivy.uix.checkbox import CheckBox
@@ -150,15 +149,27 @@ class Pantalla_Aniadir_Lista_Personas(Screen):
         sub_gift_button = Button(text = "-1", size_hint_x = 0.2)
         barra_progreso = ProgressBar(max=max_regalos, value=progreso, size_hint_x=0.3)
         add_gift_button = Button(text="+1", size_hint_x=0.2)
+        delet_button = Button(text = "Eliminar", size_hint_x= 0.2)
         sub_gift_button.bind(on_press = lambda btn: self.sub_progress(barra_progreso, nombre))
         add_gift_button.bind(on_press=lambda btn: self.add_progress(barra_progreso, nombre))
+        delet_button.bind(on_press = lambda btn:self.remove_person(personas_layout, nombre))
 
         personas_layout.add_widget(nombre_label)
         personas_layout.add_widget(sub_gift_button)
         personas_layout.add_widget(barra_progreso)
         personas_layout.add_widget(add_gift_button)
+        personas_layout.add_widget(delet_button)
 
         return personas_layout
+    
+    def remove_person(self,layout, nombre):
+        self.lista_personas.remove_widget(layout)
+
+        if storage.exists("personas"): 
+            personas = storage.get("personas")["lista"]
+            personas = [personas for persona in personas if persona ["nombre"] != nombre]
+            storage.put("personas", lista= personas)
+
     
     def sub_progress(self, barra_progreso, nombre): 
         if barra_progreso.value < barra_progreso.max:
