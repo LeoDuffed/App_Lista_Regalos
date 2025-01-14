@@ -132,6 +132,17 @@ class Personas_Regalos_Main_Screen(Screen):
         self.layout.add_widget(boton_volver)
 
         self.add_widget(self.layout)
+    
+        self.load_personas()
+
+    def load_personas(self): 
+        for persona in storage.keys(): 
+            self.add_person_to_list(persona)
+
+    def add_person_to_list(self, nombre): 
+        persona_button = Button(text = nombre, size_hint_y = None, height = 50)
+        persona_button.bind(on_press = lambda btn: self.open_person_screen(nombre))
+        self.lista_personas.add_widget(persona_button)
 
     def CambiarVolver(self, instance): 
         self.manager.current = 'listaIni'
@@ -258,6 +269,9 @@ class Lista_Regalos(App):
         sm.add_widget(Personas_Regalos_Main_Screen(name = 'AddPerson'))
         sm.add_widget(Editar_Personas(name = 'person_screen'))
         return sm
+    
+    def on_stop(self):
+        return super().on_stop()
 
 
 Lista_Regalos().run()
