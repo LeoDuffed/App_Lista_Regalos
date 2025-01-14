@@ -78,7 +78,8 @@ class Pantalla_Inicio(Screen):
                 screen.lista_personas.clear_widgets()
 
         presupuesto_screen = app.root.get_screen('presupuesto')
-        presupuesto_screen.load_budget(None)
+        presupuesto_screen.presupuesto_inicial.text = "Presupuesto no definido"
+        presupuesto_screen.update_budget_label(0)
     
     def Cambiar_Presupuesto(self, instance): 
         self.manager.current = 'presupuesto'
