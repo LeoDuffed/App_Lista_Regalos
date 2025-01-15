@@ -34,15 +34,15 @@ class Pantalla_Inicio(Screen):
         welcomerLabel = Label (text = "Tus listas de regalos", font_size = '30sp', color = (0,0,0,1))
         layout.add_widget(welcomerLabel)
 
-        boton_pantalla_presupuesto = Button(text = "Tu presupuesto", pos_hint = {"center_x": 0.5}, background_color = (0.5,1,0,1))
+        boton_pantalla_presupuesto = Button(text = "Tu presupuesto", pos_hint = {"center_x": 0.5}, background_color = (0.5,1,0,1), size_hint = (0.92, None), height = 130, font_size = '20sp')
         boton_pantalla_presupuesto.bind(on_press = self.Cambiar_Presupuesto)
         layout.add_widget(boton_pantalla_presupuesto)
 
-        boton_pantalla_personas = Button(text = "Inicia tu lista", pos_hint = {"center_x": 0.5}, background_color = (0.5,1,0,1))
+        boton_pantalla_personas = Button(text = "Inicia tu lista", pos_hint = {"center_x": 0.5}, background_color = (0.5,1,0,1), size_hint = (0.92, None), height = 130, font_size = '20sp')
         boton_pantalla_personas.bind(on_press = self.CambiarPersonas)
         layout.add_widget(boton_pantalla_personas)
 
-        boton_agregar_personas = Button(text = "Agrega personas",pos_hint = {"center_x": 0.5}, background_color = (0.5,1,0,1) )
+        boton_agregar_personas = Button(text = "Agrega personas",pos_hint = {"center_x": 0.5}, background_color = (0.5,1,0,1), size_hint = (0.92, None), height = 130, font_size = '20sp' )
         boton_agregar_personas.bind(on_press = self.Cambiar_Agregar_Peronas)
         layout.add_widget(boton_agregar_personas)
 
@@ -53,7 +53,7 @@ class Pantalla_Inicio(Screen):
     def reset_lists_buttons(self, instance): 
         content = BoxLayout(orientation='vertical', spacing=10, padding=10)
 
-        mensaje = Label(text="¿Estás seguro de que quieres reiniciar la app?\nEsta acción borrará todos los datos.", size_hint_y=0.6)
+        mensaje = Label(text="¿Estás seguro de que quieres reiniciar la app?\nEsta acción borrará todos los datos.", size_hint_y=0.6, font_size = '13sp')
         content.add_widget(mensaje)
 
         botones = BoxLayout(size_hint_y=0.4, spacing=10)
@@ -174,7 +174,9 @@ class Pantalla_Presupuesto(Screen):
     def update_budget_label(self, budget): 
         self.budget_track_label.text = f"Presupuesto: ${budget:.2f}"
 
-    def on_touch_move(self, touch): 
+    def on_touch_move(self, touch):
+        app = App.get_running_app() 
+        app.root.transition = SlideTransition(direction = "right")
         if touch.dx > 50: 
             self.manager.current = 'inicio'
 
@@ -240,10 +242,10 @@ class Pantalla_Aniadir_Lista_Personas(Screen):
     def create_person_layout(self, nombre, max_regalos, progreso):
         personas_layout = BoxLayout(size_hint_y=None, height=50, spacing=10)
 
-        nombre_label = Label(text=nombre, size_hint_x=0.3, color=(0, 0, 0, 1))
-        sub_gift_button = Button(text = "-1", size_hint_x = 0.2)
-        barra_progreso = ProgressBar(max=max_regalos, value=progreso, size_hint_x=0.3)
-        add_gift_button = Button(text="+1", size_hint_x=0.2)
+        nombre_label = Label(text=nombre, size_hint_x=0.3, color=(0, 0, 0, 1), font_size = '18sp')
+        sub_gift_button = Button(text = "-1", size_hint = (None, None), width = 50, height = 50)
+        barra_progreso = ProgressBar(max=max_regalos, value=progreso, size_hint = (None, None), width = 300, height = 30)
+        add_gift_button = Button(text="+1", size_hint = (None, None), width = 50, height = 50)
         delet_button = Button(text = "Eliminar", size_hint_x= 0.2)
         sub_gift_button.bind(on_press = lambda btn: self.sub_progress(barra_progreso, nombre))
         add_gift_button.bind(on_press=lambda btn: self.add_progress(barra_progreso, nombre))
@@ -288,6 +290,8 @@ class Pantalla_Aniadir_Lista_Personas(Screen):
             storage.put("personas", lista=personas)
 
     def on_touch_move(self, touch): 
+        app = App.get_running_app() 
+        app.root.transition = SlideTransition(direction = "right")
         if touch.dx > 50: 
             self.manager.current = 'inicio'
 
@@ -328,14 +332,14 @@ class Personas_Regalos_Main_Screen(Screen):
             self.add_person_to_list(persona)
 
     def add_person_to_list(self, nombre): 
-        persona_button = Button(text = nombre, size_hint_y = None, height = 150)
+        persona_button = Button(text = nombre, pos_hint = {"center_x": 0.5}, size_hint = (0.92, None), height = 90, font_size = '20sp')
         persona_button.bind(on_press = lambda btn: self.open_person_screen(nombre))
         self.lista_personas.add_widget(persona_button)
     
     def add_person(self, instance):
         nombre = self.nombre_input.text.strip()
         if nombre: 
-            persona_button = Button(text = nombre, size_hint_y = None, height = 50)
+            persona_button = Button(text = nombre,  pos_hint = {"center_x": 0.5}, size_hint = (0.92, None), height = 90, font_size = '20sp')
             persona_button.bind(on_press = lambda btn: self.open_person_screen(nombre))
             self.lista_personas.add_widget(persona_button)
             self.nombre_input.text = ""
@@ -348,6 +352,8 @@ class Personas_Regalos_Main_Screen(Screen):
         app.root.current = 'person_screen'
     
     def on_touch_move(self, touch): 
+        app = App.get_running_app() 
+        app.root.transition = SlideTransition(direction = "right")
         if touch.dx > 50: 
             self.manager.current = 'inicio'
 
@@ -440,6 +446,8 @@ class Editar_Personas(Screen):
             storage.put(persona, regalos=regalos)
     
     def on_touch_move(self, touch): 
+        app = App.get_running_app() 
+        app.root.transition = SlideTransition(direction = "right")
         if touch.dx > 50: 
             self.manager.current = 'AddPerson'
 
