@@ -25,24 +25,24 @@ class Pantalla_Inicio(Screen):
 
         main_layout = FloatLayout()
 
-        layout = BoxLayout(orientation = 'vertical', padding = 20, spacing = 10)
+        layout = BoxLayout(orientation = 'vertical', padding = (10,50), spacing = 20)
 
-        reset_button = Button(text = "Reset", size_hint = (0.1,0.05), pos_hint = {'right': 1, 'top': 1})
+        reset_button = Button(text = "Reset", size_hint = (0.2,0.05), pos_hint = {'right': 1, 'top': 1})
         reset_button.bind(on_release = self.reset_lists_buttons)
         main_layout.add_widget(reset_button)
 
-        welcomerLabel = Label (text = "Tus listas de regalos", font_size = '30sp', color = (0,0,0,1))
+        welcomerLabel = Label (text = "Tus listas de regalos", font_size = '30sp', color = (0,0,0,1), halign = 'center', size_hint_y = 0.2)
         layout.add_widget(welcomerLabel)
 
-        boton_pantalla_presupuesto = Button(text = "Tu presupuesto", pos_hint = {"center_x": 0.5}, background_color = (0.5,1,0,1), size_hint = (0.92, None), height = 130, font_size = '20sp')
+        boton_pantalla_presupuesto = Button(text = "Tu presupuesto", pos_hint = {"center_x": 0.5}, background_color = (0.5,1,0,1), size_hint = (0.92, None), height = 200, font_size = '20sp')
         boton_pantalla_presupuesto.bind(on_press = self.Cambiar_Presupuesto)
         layout.add_widget(boton_pantalla_presupuesto)
 
-        boton_pantalla_personas = Button(text = "Inicia tu lista", pos_hint = {"center_x": 0.5}, background_color = (0.5,1,0,1), size_hint = (0.92, None), height = 130, font_size = '20sp')
+        boton_pantalla_personas = Button(text = "Inicia tu lista", pos_hint = {"center_x": 0.5}, background_color = (0.5,1,0,1), size_hint = (0.92, None), height = 200, font_size = '20sp')
         boton_pantalla_personas.bind(on_press = self.CambiarPersonas)
         layout.add_widget(boton_pantalla_personas)
 
-        boton_agregar_personas = Button(text = "Agrega personas",pos_hint = {"center_x": 0.5}, background_color = (0.5,1,0,1), size_hint = (0.92, None), height = 130, font_size = '20sp' )
+        boton_agregar_personas = Button(text = "Agrega personas",pos_hint = {"center_x": 0.5}, background_color = (0.5,1,0,1), size_hint = (0.92, None), height = 200, font_size = '20sp' )
         boton_agregar_personas.bind(on_press = self.Cambiar_Agregar_Peronas)
         layout.add_widget(boton_agregar_personas)
 
