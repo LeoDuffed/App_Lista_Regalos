@@ -105,9 +105,6 @@ class Pantalla_Presupuesto(Screen):
         self.presupuesto_inicial = Label(text = "", font_size = '20sp', color = (0,0,0,1), halign = 'center')
         self.layout.add_widget(self.presupuesto_inicial)
 
-        self.budget_track_label = Label(text = "", font_size = '25sp', color = (0,0,0,1), halign = 'center')
-        self.layout.add_widget(self.budget_track_label)
-
         input_budget = BoxLayout(size_hint = (1, 0.2), spacing = 10)
         self.budget_input = TextInput(hint_text = "Ingrese su presupuesto", multiline = False)
         add_budget_button = Button(text = "Añadir presupuesto", on_press = self.add_presupuesto)
@@ -122,6 +119,9 @@ class Pantalla_Presupuesto(Screen):
         input_gasto_layout.add_widget(add_gasto_button)
         self.layout.add_widget(input_gasto_layout) 
 
+        self.budget_track_label = Label(text = "", font_size = '25sp', color = (0,0,0,1), halign = 'center')
+        self.layout.add_widget(self.budget_track_label)
+
         self.add_widget(self.layout)
 
         self.load_budget(self)
@@ -131,7 +131,7 @@ class Pantalla_Presupuesto(Screen):
         try: 
             budget = float(self.budget_input.text)
             storage.put("budget", total = budget, initial = budget)
-            self.presupuesto_inicial.text = f"Presupuesto inicial: ${budget}"
+            self.presupuesto_inicial.text = f"Presupuesto inicial: ${budget:.2f}"
             self.update_budget_label(budget)
             self.budget_input.text = ""
         except ValueError: 
@@ -190,12 +190,6 @@ class Pantalla_Aniadir_Lista_Personas(Screen):
         welcomerLabel = Label (text = "Crea tus listas", font_size = '30sp', color = (0,0,0,1))
         layout.add_widget(welcomerLabel)
 
-        self.scroll = ScrollView(size_hint = (1, 0.8))
-        self.lista_personas = BoxLayout(orientation = 'vertical', size_hint_y = None)
-        self.lista_personas.bind(minimum_height = self.lista_personas.setter('height'))
-        self.scroll.add_widget(self.lista_personas)
-        layout.add_widget(self.scroll)
-
         input_data = BoxLayout(size_hint = (1, 0.2), spacing = 10)
         self.name_input = TextInput(hint_text = "Nombre de la persona", multiline = False)
         self.regalos_cont_input = TextInput(hint_text = "Numero de regalos", multiline = False)
@@ -204,6 +198,12 @@ class Pantalla_Aniadir_Lista_Personas(Screen):
         input_data.add_widget(self.regalos_cont_input)
         input_data.add_widget(add_person_button)
         layout.add_widget(input_data)
+
+        self.scroll = ScrollView(size_hint = (1, 0.8))
+        self.lista_personas = BoxLayout(orientation = 'vertical', size_hint_y = None)
+        self.lista_personas.bind(minimum_height = self.lista_personas.setter('height'))
+        self.scroll.add_widget(self.lista_personas)
+        layout.add_widget(self.scroll)
 
         self.add_widget(layout)
 
@@ -301,18 +301,18 @@ class Personas_Regalos_Main_Screen(Screen):
         instruction_label = Label (text = "Agrega a las personas", font_size = '25sp', color = (0,0,0,1))
         self.layout.add_widget(instruction_label)
 
-        self.scroll = ScrollView(size_hint = (1,0.8))
-        self.lista_personas = BoxLayout(orientation = 'vertical', size_hint_y = None)
-        self.lista_personas.bind(minimum_height = self.lista_personas.setter('height'))
-        self.scroll.add_widget(self.lista_personas)
-        self.layout.add_widget(self.scroll)
-
         input_area = BoxLayout(size_hint = (1, 0.2), spacing = 10)
         self.nombre_input = TextInput(hint_text = "Nombre de la persona", multiline = False)
         add_person_button = Button(text = "Agregar persona", on_press = self.add_person)
         input_area.add_widget(self.nombre_input)
         input_area.add_widget(add_person_button)
         self.layout.add_widget(input_area)
+
+        self.scroll = ScrollView(size_hint = (1,0.8))
+        self.lista_personas = BoxLayout(orientation = 'vertical', size_hint_y = None)
+        self.lista_personas.bind(minimum_height = self.lista_personas.setter('height'))
+        self.scroll.add_widget(self.lista_personas)
+        self.layout.add_widget(self.scroll)
 
         self.add_widget(self.layout)
     
@@ -322,11 +322,13 @@ class Personas_Regalos_Main_Screen(Screen):
         for persona in storage.keys(): 
             if persona == "personas": 
                 continue
+            if persona == "budget":
+                continue
 
             self.add_person_to_list(persona)
 
     def add_person_to_list(self, nombre): 
-        persona_button = Button(text = nombre, size_hint_y = None, height = 50)
+        persona_button = Button(text = nombre, size_hint_y = None, height = 150)
         persona_button.bind(on_press = lambda btn: self.open_person_screen(nombre))
         self.lista_personas.add_widget(persona_button)
     
@@ -360,18 +362,18 @@ class Editar_Personas(Screen):
         self.persona_label = Label(text = "", size_hint = (1, 0.1), font_size = "20sp", color = (0,0,0,1))
         self.layout.add_widget(self.persona_label)
 
-        self.scroll = ScrollView(size_hint = (1, 0.8))
-        self.checklist = BoxLayout(orientation = 'vertical', size_hint_y = None, spacing = 10)
-        self.checklist.bind(minimum_height = self.checklist.setter("height"))
-        self.scroll.add_widget(self.checklist)
-        self.layout.add_widget(self.scroll)
-
         input_area = BoxLayout(size_hint = (1, 0.2), spacing = 10)
         self.regalo_input = TextInput(hint_text = "Ingresa regalo", multiline = False)
         agreagar_button = Button(text = "Añadir", on_press = self.add_item)
         input_area.add_widget(self.regalo_input)
         input_area.add_widget(agreagar_button)
         self.layout.add_widget(input_area)
+
+        self.scroll = ScrollView(size_hint = (1, 0.8))
+        self.checklist = BoxLayout(orientation = 'vertical', size_hint_y = None, spacing = 10)
+        self.checklist.bind(minimum_height = self.checklist.setter("height"))
+        self.scroll.add_widget(self.checklist)
+        self.layout.add_widget(self.scroll)
 
     def set_person_name(self, name):
         self.persona_label.text = f"Regalos para {name}"
