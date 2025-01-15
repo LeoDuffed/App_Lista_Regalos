@@ -196,10 +196,10 @@ class Pantalla_Aniadir_Lista_Personas(Screen):
 
         layout = BoxLayout(orientation = 'vertical', padding = 10, spacing = 10)
 
-        welcomerLabel = Label (text = "Crea tus listas", font_size = '30sp', color = (0,0,0,1), halign = 'center')
+        welcomerLabel = Label (text = "Crea tus listas", font_size = '30sp', color = (0,0,0,1), halign = 'center', size_hint_y = 0.4)
         layout.add_widget(welcomerLabel)
 
-        input_data = BoxLayout(size_hint = (1, 0.2), spacing = 10)
+        input_data = BoxLayout(size_hint = (1, 0.2), spacing = 10, size_hint_y = 0.2)
         self.name_input = TextInput(hint_text = "Nombre de la persona", multiline = False)
         self.regalos_cont_input = TextInput(hint_text = "Numero de regalos", multiline = False)
         add_person_button = Button(text = "Añadir persona", on_press = self.add_person)  
@@ -247,7 +247,7 @@ class Pantalla_Aniadir_Lista_Personas(Screen):
                 self.lista_personas.add_widget(personas_layout)
 
     def create_person_layout(self, nombre, max_regalos, progreso):
-        personas_layout = BoxLayout(size_hint_y = None, height = 50, spacing = 10)
+        personas_layout = BoxLayout(size_hint_y = None, height = 50, spacing = 20)
 
         nombre_label = Label(text=nombre, size_hint_x = 0.3, color = (0,0,0,1))
         sub_gift_button = Button(text = "-1",size_hint = (None, None), width = 50, height = 50)
@@ -320,7 +320,7 @@ class Personas_Regalos_Main_Screen(Screen):
         self.layout.add_widget(input_area)
 
         self.scroll = ScrollView(size_hint = (1,0.8))
-        self.lista_personas = BoxLayout(orientation = 'vertical', size_hint_y = None)
+        self.lista_personas = BoxLayout(orientation = 'vertical', size_hint_y = None, spacing = 20)
         self.lista_personas.bind(minimum_height = self.lista_personas.setter('height'))
         self.scroll.add_widget(self.lista_personas)
         self.layout.add_widget(self.scroll)
@@ -339,7 +339,7 @@ class Personas_Regalos_Main_Screen(Screen):
             self.add_person_to_list(persona)
 
     def add_person_to_list(self, nombre): 
-        persona_button = Button(text = nombre, pos_hint = {"center_x": 0.5}, size_hint = (0.92, None), height = 90, font_size = '20sp')
+        persona_button = Button(text = nombre, pos_hint = {"center_x": 0.5}, size_hint_y = 0.92, height = 150, font_size = '20sp')
         persona_button.bind(on_press = lambda btn: self.open_person_screen(nombre))
         self.lista_personas.add_widget(persona_button)
     
@@ -369,10 +369,10 @@ class Editar_Personas(Screen):
     def __init__(self, **kw): 
         super().__init__(**kw)
 
-        self.layout = BoxLayout(orientation = 'vertical', padding = 10, spacing = 10)
+        self.layout = BoxLayout(orientation = 'vertical', padding = (10, 50,10,10), spacing = 10)
         self.add_widget(self.layout)
 
-        self.persona_label = Label(text = "", size_hint = (1, 0.1), font_size = "20sp", color = (0,0,0,1))
+        self.persona_label = Label(text = "", size_hint = (1, 0.1), font_size = "30sp", color = (0,0,0,1 ), size_hint_y = 0.2)
         self.layout.add_widget(self.persona_label)
 
         input_area = BoxLayout(size_hint = (1, 0.2), spacing = 10)
@@ -383,7 +383,7 @@ class Editar_Personas(Screen):
         self.layout.add_widget(input_area)
 
         self.scroll = ScrollView(size_hint = (1, 0.8))
-        self.checklist = BoxLayout(orientation = 'vertical', size_hint_y = None, spacing = 10)
+        self.checklist = BoxLayout(orientation = 'vertical', size_hint_y = None, spacing = 30)
         self.checklist.bind(minimum_height = self.checklist.setter("height"))
         self.scroll.add_widget(self.checklist)
         self.layout.add_widget(self.scroll)
@@ -402,13 +402,13 @@ class Editar_Personas(Screen):
                 self.checklist.add_widget(gift_layout)
 
     def create_gift_widget(self, gift_text, marcado):
-        gift_layout = BoxLayout(size_hint_y=None, height=40, spacing=10)
+        gift_layout = BoxLayout(size_hint_y=None, height=40, spacing=20)
 
-        checkbox = CheckBox(size_hint_x=0.1, active=marcado)
+        checkbox = CheckBox(size_hint_x=0.3, active=marcado, width = 50, height = 50)
         checkbox.bind(on_release=lambda cb: self.update_gift_status(gift_text, cb.active))
 
-        regalo_label = Label(text=gift_text, size_hint_x=0.8, color=(0, 0, 0, 1))
-        delete_button = Button(text="Eliminar", size_hint_x=0.1)
+        regalo_label = Label(text=gift_text, size_hint_x=0.8, color=(0, 0, 0, 1), font_size = '20sp')
+        delete_button = Button(text="Eliminar", size_hint_x=0.3, width = 100, height = 50)
         delete_button.bind(on_press=lambda btn: self.remove_gift(gift_layout, gift_text))
 
         gift_layout.add_widget(checkbox)
