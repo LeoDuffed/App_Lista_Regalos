@@ -26,24 +26,24 @@ class Pantalla_Inicio(Screen):
 
         main_layout = FloatLayout()
 
-        layout = BoxLayout(orientation = 'vertical', padding = (10,50), spacing = 20)
+        layout = BoxLayout(orientation = 'vertical', padding = 20, spacing = 10)
 
         reset_button = Button(text = "Reset", size_hint = (0.2,0.05), pos_hint = {'right': 1, 'top': 1})
         reset_button.bind(on_release = self.reset_lists_buttons)
         main_layout.add_widget(reset_button)
 
-        welcomerLabel = Label (text = "Tus listas de regalos", font_size = '30sp', color = (0,0,0,1), halign = 'center', size_hint_y = 0.2)
+        welcomerLabel = Label (text = "Tus listas de regalos", font_size = '30sp', color = (0,0,0,1))
         layout.add_widget(welcomerLabel)
 
-        boton_pantalla_presupuesto = Button(text = "Tu presupuesto", pos_hint = {"center_x": 0.5}, background_color = (0.5,1,0,1), size_hint = (0.92, None), height = 200, font_size = '20sp')
+        boton_pantalla_presupuesto = Button(text = "Tu presupuesto", pos_hint = {"center_x": 0.5}, background_color = (0.5,1,0,1), size_hint_x = 0.92, font_size = '20sp')
         boton_pantalla_presupuesto.bind(on_press = self.Cambiar_Presupuesto)
         layout.add_widget(boton_pantalla_presupuesto)
 
-        boton_pantalla_personas = Button(text = "Inicia tu lista", pos_hint = {"center_x": 0.5}, background_color = (0.5,1,0,1), size_hint = (0.92, None), height = 200, font_size = '20sp')
+        boton_pantalla_personas = Button(text = "Inicia tu lista", pos_hint = {"center_x": 0.5}, background_color = (0.5,1,0,1), size_hint_x = 0.92, font_size = '20sp')
         boton_pantalla_personas.bind(on_press = self.CambiarPersonas)
         layout.add_widget(boton_pantalla_personas)
 
-        boton_agregar_personas = Button(text = "Agrega personas",pos_hint = {"center_x": 0.5}, background_color = (0.5,1,0,1), size_hint = (0.92, None), height = 200, font_size = '20sp' )
+        boton_agregar_personas = Button(text = "Agrega personas",pos_hint = {"center_x": 0.5}, background_color = (0.5,1,0,1), size_hint_x = 0.92, font_size = '20sp')
         boton_agregar_personas.bind(on_press = self.Cambiar_Agregar_Peronas)
         layout.add_widget(boton_agregar_personas)
 
@@ -104,12 +104,12 @@ class Pantalla_Presupuesto(Screen):
     def __init__(self, **kw): 
         super().__init__(**kw)
 
-        self.layout = BoxLayout(orientation = 'vertical', padding= (10, 50, 10,10), spacing = 10)
+        self.layout = BoxLayout(orientation = 'vertical', padding = 10, spacing = 10)
 
-        welcome_label = Label(text = "Mantengase al dia\ncon su presupuesto", font_size = '30sp', color = (0,0,0,1), halign = 'center', size_hint_y = 0.2)
+        welcome_label = Label(text = "Mantengase al dia\ncon su presupuesto", font_size = '30sp', color = (0,0,0,1), halign = 'center')
         self.layout.add_widget(welcome_label)
 
-        self.presupuesto_inicial = Label(text = "", font_size = '20sp', color = (0,0,0,1), halign = 'center')
+        self.presupuesto_inicial = Label(text = "", font_size = '20sp', color = (0,0,0,1), halign = 'center',size_hint = (1, None), height = 30)
         self.layout.add_widget(self.presupuesto_inicial)
 
         input_budget = BoxLayout(size_hint = (1, 0.2), spacing = 10)
@@ -126,7 +126,7 @@ class Pantalla_Presupuesto(Screen):
         input_gasto_layout.add_widget(add_gasto_button)
         self.layout.add_widget(input_gasto_layout) 
 
-        self.budget_track_label = Label(text = "", font_size = '25sp', color = (0,0,0,1), halign = 'center')
+        self.budget_track_label = Label(text = "", font_size = '25sp', color = (0,0,0,1), halign = 'center', size_hint = (1, None), height = 30)
         self.layout.add_widget(self.budget_track_label)
 
         self.add_widget(self.layout)
@@ -194,9 +194,9 @@ class Pantalla_Aniadir_Lista_Personas(Screen):
 
         Window.clearcolor = (1, 1, 0.9, 1)
 
-        layout = BoxLayout(orientation = 'vertical', padding = (10, 50,10,30), spacing = 10)
+        layout = BoxLayout(orientation = 'vertical', padding = 10, spacing = 10)
 
-        welcomerLabel = Label (text = "Crea tus listas", font_size = '30sp', color = (0,0,0,1), halign = 'center', size_hint_y = 0.2)
+        welcomerLabel = Label (text = "Crea tus listas", font_size = '30sp', color = (0,0,0,1), halign = 'center')
         layout.add_widget(welcomerLabel)
 
         input_data = BoxLayout(size_hint = (1, 0.2), spacing = 10)
@@ -208,13 +208,11 @@ class Pantalla_Aniadir_Lista_Personas(Screen):
         input_data.add_widget(add_person_button)
         layout.add_widget(input_data)
 
-        scroll_container = AnchorLayout(size_hint = (1, 0.8))
-        self.scroll = ScrollView(size_hint = (None, 0.8), size = (600, 400))
-        self.lista_personas = BoxLayout(orientation = 'vertical', size_hint_y = None,size_hint_x = 1, padding = (10, 40, 10,10), spacing = 10)
+        self.scroll = ScrollView(size_hint = (1, 0.8))
+        self.lista_personas = BoxLayout(orientation = 'vertical', size_hint_y = None)
         self.lista_personas.bind(minimum_height = self.lista_personas.setter('height'))
         self.scroll.add_widget(self.lista_personas)
-        scroll_container.add_widget(self.scroll)
-        layout.add_widget(scroll_container)
+        layout.add_widget(self.scroll)
 
         self.add_widget(layout)
 
@@ -249,13 +247,13 @@ class Pantalla_Aniadir_Lista_Personas(Screen):
                 self.lista_personas.add_widget(personas_layout)
 
     def create_person_layout(self, nombre, max_regalos, progreso):
-        personas_layout = BoxLayout(size_hint=(1, None),width = 800, height=50, spacing=10, padding = (10,30,10,10))
+        personas_layout = BoxLayout(size_hint_y = None, height = 50, spacing = 10)
 
-        nombre_label = Label(text=nombre, size_hint = (0, 5), color=(0, 0, 0, 1), font_size = '18sp', halign = 'left', valign = 'middle')
-        sub_gift_button = Button(text = "-1", size_hint = (None, None), width = 50, height = 50)
-        barra_progreso = ProgressBar(max=max_regalos, value=progreso, size_hint = (None, 5), width = 200, height = 30)
-        add_gift_button = Button(text="+1", size_hint = (None, None), width = 50, height = 50)
-        delet_button = Button(text = "Eliminar", size_hint = (None, None), width = 100, height = 50)
+        nombre_label = Label(text=nombre, size_hint_x = 0.3, color = (0,0,0,1))
+        sub_gift_button = Button(text = "-1",size_hint = (None, None), width = 50, height = 50)
+        barra_progreso = ProgressBar(max=max_regalos, value=progreso, size_hint_x = 0.3)
+        add_gift_button = Button(text="+1",size_hint = (None, None), width = 50, height = 50)
+        delet_button = Button(text = "Eliminar", size_hint_x = 0.3, width = 100, height = 50)
         sub_gift_button.bind(on_press = lambda btn: self.sub_progress(barra_progreso, nombre))
         add_gift_button.bind(on_press=lambda btn: self.add_progress(barra_progreso, nombre))
         delet_button.bind(on_press = lambda btn:self.remove_person(personas_layout, nombre))
