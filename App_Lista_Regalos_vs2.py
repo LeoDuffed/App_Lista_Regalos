@@ -104,29 +104,29 @@ class Pantalla_Presupuesto(Screen):
     def __init__(self, **kw): 
         super().__init__(**kw)
 
-        self.layout = BoxLayout(orientation = 'vertical', padding = 10, spacing = 10)
+        self.layout = BoxLayout(orientation = 'vertical', padding = (10, 50,10,10), spacing = 10)
 
-        welcome_label = Label(text = "Mantengase al dia\ncon su presupuesto", font_size = '30sp', color = (0,0,0,1), halign = 'center')
+        welcome_label = Label(text = "Mantengase al dia\ncon su presupuesto", font_size = '30sp', color = (0,0,0,1), halign = 'center', size_hint_y = 0.2)
         self.layout.add_widget(welcome_label)
 
-        self.presupuesto_inicial = Label(text = "", font_size = '20sp', color = (0,0,0,1), halign = 'center',size_hint = (1, None), height = 30)
+        self.presupuesto_inicial = Label(text = "", font_size = '20sp', color = (0,0,0,1), halign = 'center', height = 30, size_hint_y = 0.2)
         self.layout.add_widget(self.presupuesto_inicial)
 
-        input_budget = BoxLayout(size_hint = (1, 0.2), spacing = 10)
+        input_budget = BoxLayout(size_hint = (1, 0.2), spacing = 10, size_hint_y = 0.2)
         self.budget_input = TextInput(hint_text = "Ingrese su presupuesto", multiline = False)
         add_budget_button = Button(text = "Añadir presupuesto", on_press = self.add_presupuesto)
         input_budget.add_widget(self.budget_input)
         input_budget.add_widget(add_budget_button)
         self.layout.add_widget(input_budget)
 
-        input_gasto_layout = BoxLayout(size_hint = (1, 0.2), spacing = 10)
+        input_gasto_layout = BoxLayout(size_hint = (1, 0.2), spacing = 10, size_hint_y = 0.2)
         self.gasto_input = TextInput(hint_text = "Ingrese lo gastado", multiline = False)
         add_gasto_button = Button(text = "Agrega gasto", on_press = self.sub_gasto)
         input_gasto_layout.add_widget(self.gasto_input)
         input_gasto_layout.add_widget(add_gasto_button)
         self.layout.add_widget(input_gasto_layout) 
 
-        self.budget_track_label = Label(text = "", font_size = '25sp', color = (0,0,0,1), halign = 'center', size_hint = (1, None), height = 30)
+        self.budget_track_label = Label(text = "", font_size = '30sp', color = (0,0,0,1), halign = 'center', height = 30, size_hint_y = 0.3)
         self.layout.add_widget(self.budget_track_label)
 
         self.add_widget(self.layout)
