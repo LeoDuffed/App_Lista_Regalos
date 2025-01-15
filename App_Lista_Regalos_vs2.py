@@ -2,6 +2,7 @@
 
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.label import Label
 from kivy.uix.button import Button
@@ -207,11 +208,13 @@ class Pantalla_Aniadir_Lista_Personas(Screen):
         input_data.add_widget(add_person_button)
         layout.add_widget(input_data)
 
-        self.scroll = ScrollView(size_hint = (1, 0.8))
-        self.lista_personas = BoxLayout(orientation = 'vertical', size_hint_y = None)
+        scroll_container = AnchorLayout(size_hint = (1, 0.8))
+        self.scroll = ScrollView(size_hint = (None, 0.8), size = (600, 400))
+        self.lista_personas = BoxLayout(orientation = 'vertical', size_hint_y = None,size_hint_x = 1, padding = (10, 40, 10,10), spacing = 10)
         self.lista_personas.bind(minimum_height = self.lista_personas.setter('height'))
         self.scroll.add_widget(self.lista_personas)
-        layout.add_widget(self.scroll)
+        scroll_container.add_widget(self.scroll)
+        layout.add_widget(scroll_container)
 
         self.add_widget(layout)
 
@@ -246,13 +249,13 @@ class Pantalla_Aniadir_Lista_Personas(Screen):
                 self.lista_personas.add_widget(personas_layout)
 
     def create_person_layout(self, nombre, max_regalos, progreso):
-        personas_layout = BoxLayout(size_hint_y=None, height=50, spacing=10)
+        personas_layout = BoxLayout(size_hint=(1, None),width = 800, height=50, spacing=10, padding = (10,30,10,10))
 
-        nombre_label = Label(text=nombre, size_hint_x=0.3, color=(0, 0, 0, 1), font_size = '18sp')
+        nombre_label = Label(text=nombre, size_hint = (0, 5), color=(0, 0, 0, 1), font_size = '18sp', halign = 'left', valign = 'middle')
         sub_gift_button = Button(text = "-1", size_hint = (None, None), width = 50, height = 50)
-        barra_progreso = ProgressBar(max=max_regalos, value=progreso, size_hint = (None, None), width = 300, height = 30)
+        barra_progreso = ProgressBar(max=max_regalos, value=progreso, size_hint = (None, 5), width = 200, height = 30)
         add_gift_button = Button(text="+1", size_hint = (None, None), width = 50, height = 50)
-        delet_button = Button(text = "Eliminar", size_hint_x= 0.2)
+        delet_button = Button(text = "Eliminar", size_hint = (None, None), width = 100, height = 50)
         sub_gift_button.bind(on_press = lambda btn: self.sub_progress(barra_progreso, nombre))
         add_gift_button.bind(on_press=lambda btn: self.add_progress(barra_progreso, nombre))
         delet_button.bind(on_press = lambda btn:self.remove_person(personas_layout, nombre))
