@@ -84,12 +84,18 @@ class Pantalla_Inicio(Screen):
         presupuesto_screen.update_budget_label(0)
     
     def Cambiar_Presupuesto(self, instance): 
+        app = App.get_running_app()
+        app.root.transition = SlideTransition(direction="left") 
         self.manager.current = 'presupuesto'
                 
     def CambiarPersonas(self, instance):
+        app = App.get_running_app()
+        app.root.transition = SlideTransition(direction="left") 
         self.manager.current = 'listaIni'
 
     def Cambiar_Agregar_Peronas(self, instance):
+        app = App.get_running_app()
+        app.root.transition = SlideTransition(direction="left") 
         self.manager.current = 'AddPerson'
                             
 
@@ -97,9 +103,9 @@ class Pantalla_Presupuesto(Screen):
     def __init__(self, **kw): 
         super().__init__(**kw)
 
-        self.layout = BoxLayout(orientation = 'vertical', padding= 10, spacing = 10)
+        self.layout = BoxLayout(orientation = 'vertical', padding= (10, 50, 10,10), spacing = 10)
 
-        welcome_label = Label(text = "Mantengase al dia\ncon su presupuesto", font_size = '30sp', color = (0,0,0,1), halign = 'center')
+        welcome_label = Label(text = "Mantengase al dia\ncon su presupuesto", font_size = '30sp', color = (0,0,0,1), halign = 'center', size_hint_y = 0.2)
         self.layout.add_widget(welcome_label)
 
         self.presupuesto_inicial = Label(text = "", font_size = '20sp', color = (0,0,0,1), halign = 'center')
@@ -187,9 +193,9 @@ class Pantalla_Aniadir_Lista_Personas(Screen):
 
         Window.clearcolor = (1, 1, 0.9, 1)
 
-        layout = BoxLayout(orientation = 'vertical', padding = 10, spacing = 10)
+        layout = BoxLayout(orientation = 'vertical', padding = (10, 50,10,30), spacing = 10)
 
-        welcomerLabel = Label (text = "Crea tus listas", font_size = '30sp', color = (0,0,0,1))
+        welcomerLabel = Label (text = "Crea tus listas", font_size = '30sp', color = (0,0,0,1), halign = 'center', size_hint_y = 0.2)
         layout.add_widget(welcomerLabel)
 
         input_data = BoxLayout(size_hint = (1, 0.2), spacing = 10)
@@ -300,9 +306,9 @@ class Personas_Regalos_Main_Screen(Screen):
     def __init__(self, **kw):
         super().__init__(**kw)
 
-        self.layout = BoxLayout(orientation = 'vertical', padding = 20, spacing = 10)
+        self.layout = BoxLayout(orientation = 'vertical', padding = (10, 50,10,30), spacing = 10)
 
-        instruction_label = Label (text = "Agrega a las personas", font_size = '25sp', color = (0,0,0,1))
+        instruction_label = Label (text = "Agrega a las personas", font_size = '30sp', color = (0,0,0,1), size_hint_y = 0.3)
         self.layout.add_widget(instruction_label)
 
         input_area = BoxLayout(size_hint = (1, 0.2), spacing = 10)
