@@ -469,6 +469,12 @@ class Editar_Personas(Screen):
         if touch.dx > 50: 
             self.manager.current = 'AddPerson'
 
+    def on_pre_leave(self): 
+        if platform == 'android':
+            app = App.get_running_app() 
+            app.root.transition = SlideTransition(direction = "right")
+            app.root.current = 'AddPerson'
+
 
 class Lista_Regalos(App):
     def build(self):
@@ -488,6 +494,8 @@ class Lista_Regalos(App):
         if key == 27: 
             screen_manager = self.root
             if screen_manager.current != 'inicio': 
+                app = App.get_running_app() 
+                app.root.transition = SlideTransition(direction = "right")
                 screen_manager.current = 'inicio'
                 return True
             return False
