@@ -212,15 +212,18 @@ class Pantalla_Aniadir_Lista_Personas(Screen):
 
         self.scroll = ScrollView(size_hint = (1, 0.8))
         self.lista_personas = BoxLayout(orientation = 'vertical', size_hint_y = None, spacing = 30)
-        empty_label = Label(text = "", size_hint_y = None, height = 50)
-        self.lista_personas.add_widget(empty_label)
         self.lista_personas.bind(minimum_height = self.lista_personas.setter('height'))
         self.scroll.add_widget(self.lista_personas)
         layout.add_widget(self.scroll)
 
         self.add_widget(layout)
-
+        self.ensure_empty_label()
         self.load_personas()
+
+    def ensure_empty_label(self): 
+        if len(self.lista_personas.children) == 0 or not isinstance(self.lista_personas.children[-1], Label):
+            empty_label = Label(text = "", size_hint_y = None, height = 50)
+            self.lista_personas.add_widget(empty_label)
 
     def add_person(self, instance):
         nombre = self.name_input.text.strip()
@@ -245,10 +248,8 @@ class Pantalla_Aniadir_Lista_Personas(Screen):
         if storage.exists("personas"):
             personas = storage.get("personas")["lista"]
             for persona in personas:
-                personas_layout = self.create_person_layout(
-                    persona["nombre"], persona["max_regalos"], persona["progreso"]
-                )
-                self.lista_personas.add_widget(personas_layout)
+                personas_layout = self.create_person_layout(persona["nombre"], persona["max_regalos"], persona["progreso"])
+                self.lista_personas.add_widget(personas_layout, index= len(self.lista_personas.children)-1)
 
     def create_person_layout(self, nombre, max_regalos, progreso):
         personas_layout = BoxLayout(size_hint_y = None, height = 80, spacing = 30)
