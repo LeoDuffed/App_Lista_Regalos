@@ -32,18 +32,20 @@ class Pantalla_Inicio(Screen):
         reset_button.bind(on_release = self.reset_lists_buttons)
         main_layout.add_widget(reset_button)
 
-        welcomerLabel = Label (text = "Tus listas de regalos", font_size = '30sp', color = (0,0,0,1))
+        welcomerLabel = Label (text = "", font_size = '30sp', color = (0,0,0,1))
+        welcomerLabel.markup = True
+        welcomerLabel.text = f"[b]Tus listas de regalos[/b]"
         layout.add_widget(welcomerLabel)
 
-        boton_pantalla_presupuesto = Button(text = "Tu presupuesto", pos_hint = {"center_x": 0.5}, background_color = (0.5,1,0,1), size_hint_x = 0.92, font_size = '20sp')
+        boton_pantalla_presupuesto = Button(text = "Tu presupuesto", pos_hint = {"center_x": 0.5}, size_hint_x = 0.92, font_size = '20sp')
         boton_pantalla_presupuesto.bind(on_press = self.Cambiar_Presupuesto)
         layout.add_widget(boton_pantalla_presupuesto)
 
-        boton_pantalla_personas = Button(text = "Inicia tu lista", pos_hint = {"center_x": 0.5}, background_color = (0.5,1,0,1), size_hint_x = 0.92, font_size = '20sp')
+        boton_pantalla_personas = Button(text = "Inicia tu lista", pos_hint = {"center_x": 0.5}, size_hint_x = 0.92, font_size = '20sp')
         boton_pantalla_personas.bind(on_press = self.CambiarPersonas)
         layout.add_widget(boton_pantalla_personas)
 
-        boton_agregar_personas = Button(text = "Agrega personas",pos_hint = {"center_x": 0.5}, background_color = (0.5,1,0,1), size_hint_x = 0.92, font_size = '20sp')
+        boton_agregar_personas = Button(text = "Agrega personas",pos_hint = {"center_x": 0.5}, size_hint_x = 0.92, font_size = '20sp')
         boton_agregar_personas.bind(on_press = self.Cambiar_Agregar_Peronas)
         layout.add_widget(boton_agregar_personas)
 
@@ -106,20 +108,22 @@ class Pantalla_Presupuesto(Screen):
 
         self.layout = BoxLayout(orientation = 'vertical', padding = (10, 50,10,10), spacing = 10)
 
-        welcome_label = Label(text = "Mantengase al dia\ncon su presupuesto", font_size = '30sp', color = (0,0,0,1), halign = 'center', size_hint_y = 0.2)
+        welcome_label = Label(text = "", font_size = '30sp', color = (0,0,0,1), halign = 'center', size_hint_y = 0.2)
+        welcome_label.markup= True
+        welcome_label.text = f"[b]Mantengase al dia\ncon su presupuesto[/b]"
         self.layout.add_widget(welcome_label)
 
         self.presupuesto_inicial = Label(text = "", font_size = '20sp', color = (0,0,0,1), halign = 'center', height = 30, size_hint_y = 0.2)
         self.layout.add_widget(self.presupuesto_inicial)
 
-        input_budget = BoxLayout(size_hint = (1, 0.2), spacing = 10, size_hint_y = 0.2)
+        input_budget = BoxLayout(size_hint = (1, 0.2), spacing = 10, size_hint_y = 0.2, padding = (50,3,50,3))
         self.budget_input = TextInput(hint_text = "Ingrese su presupuesto", multiline = False, height = 150)
         add_budget_button = Button(text = "Añadir presupuesto", on_press = self.add_presupuesto, height = 150)
         input_budget.add_widget(self.budget_input)
         input_budget.add_widget(add_budget_button)
         self.layout.add_widget(input_budget)
 
-        input_gasto_layout = BoxLayout(size_hint = (1, 0.2), spacing = 10, size_hint_y = 0.2)
+        input_gasto_layout = BoxLayout(size_hint = (1, 0.2), spacing = 10, size_hint_y = 0.2, padding = (50,3,50,3))
         self.gasto_input = TextInput(hint_text = "Ingrese lo gastado", multiline = False, height = 150)
         add_gasto_button = Button(text = "Agrega gasto", on_press = self.sub_gasto, height = 150)
         input_gasto_layout.add_widget(self.gasto_input)
@@ -142,7 +146,8 @@ class Pantalla_Presupuesto(Screen):
             self.update_budget_label(budget)
             self.budget_input.text = ""
         except ValueError: 
-            self.budget_track_label.text = "Error: Ingrese un numero valido"
+            self.budget_track_label.markup = True
+            self.budget_track_label.text = f"[b]Error: Ingrese un numero valido[/b]"
             return 
         
     def sub_gasto(self, instance): 
@@ -150,7 +155,8 @@ class Pantalla_Presupuesto(Screen):
         try: 
             gasto = float(self.gasto_input.text)
         except ValueError: 
-            self.budget_track_label.text = "Error: Ingrese un numero valido"
+            self.budget_track_label.markup = True
+            self.budget_track_label.text = f"[b]Error: Ingrese un numero valido[/b]"
             return 
 
         if storage.exists("budget"): 
@@ -159,7 +165,8 @@ class Pantalla_Presupuesto(Screen):
             budget = 0
 
         if gasto > budget: 
-            self.budget_track_label.text = "Se acabo tu presupuesto"
+            self.budget_track_label.markup = True
+            self.budget_track_label.text = f"[b]Se acabo tu presupuesto[/b]"
         else: 
             budget -= gasto
             storage.put("budget", total = budget)
@@ -179,7 +186,8 @@ class Pantalla_Presupuesto(Screen):
             self.update_budget_label(0)
 
     def update_budget_label(self, budget): 
-        self.budget_track_label.text = f"Presupuesto: ${budget:.2f}"
+        self.budget_track_label.markup = True
+        self.budget_track_label.text = f"[b]Presupuesto: ${budget:.2f}[/b]"
 
     def on_touch_move(self, touch):
         app = App.get_running_app() 
@@ -192,14 +200,17 @@ class Pantalla_Aniadir_Lista_Personas(Screen):
     def __init__(self, **k):
         super().__init__(**k)
 
-        Window.clearcolor = (1, 1, 0.9, 1)
+        Window.clearcolor = (1,1,1,1)
+        #Window.clearcolor = (1, 1, 0.9, 1)
 
         layout = BoxLayout(orientation = 'vertical', padding = 10, spacing = 10)
 
-        welcomerLabel = Label (text = "Crea tus listas", font_size = '30sp', color = (0,0,0,1), halign = 'center', size_hint_y = 0.4)
+        welcomerLabel = Label (text = "", font_size = '30sp', color = (0,0,0,1), halign = 'center', size_hint_y = 0.4)
+        welcomerLabel.markup = True
+        welcomerLabel.text= f"[b]Crea tus listas[/b]"
         layout.add_widget(welcomerLabel)
 
-        input_data = BoxLayout(size_hint = (1, 0.2), spacing = 10, size_hint_y = 0.2)
+        input_data = BoxLayout(size_hint = (1, 0.2), spacing = 10, size_hint_y = 0.2, padding = (50,5,50,5))
         self.name_input = TextInput(hint_text = "Nombre de la persona", multiline = False, height = 120)
         self.regalos_cont_input = TextInput(hint_text = "Numero de regalos", multiline = False,height = 120)
         add_person_button = Button(text = "Añadir persona", on_press = self.add_person, height = 120)  
@@ -211,7 +222,7 @@ class Pantalla_Aniadir_Lista_Personas(Screen):
         layout.add_widget(Widget(size_hint_y=0.07))
 
         self.scroll = ScrollView(size_hint = (1, 0.8))
-        self.lista_personas = BoxLayout(orientation = 'vertical', size_hint_y = None, spacing = 30)
+        self.lista_personas = BoxLayout(orientation = 'vertical', size_hint_y = None, padding = (50,5,50,5), spacing = 30)
         self.lista_personas.bind(minimum_height = self.lista_personas.setter('height'))
         self.scroll.add_widget(self.lista_personas)
         layout.add_widget(self.scroll)
@@ -315,10 +326,12 @@ class Personas_Regalos_Main_Screen(Screen):
 
         self.layout = BoxLayout(orientation = 'vertical', padding = (10, 50,10,30), spacing = 10)
 
-        instruction_label = Label (text = "Agrega a las personas", font_size = '30sp', color = (0,0,0,1), size_hint_y = 0.3)
+        instruction_label = Label (text = "", font_size = '30sp', color = (0,0,0,1), size_hint_y = 0.3)
+        instruction_label.markup = True
+        instruction_label.text = f"[b]Agrega a las personas[/b]"
         self.layout.add_widget(instruction_label)
 
-        input_area = BoxLayout(size_hint = (1, 0.2), spacing = 10)
+        input_area = BoxLayout(size_hint = (1, 0.2), spacing = 10, padding = (50,10,50,10))
         self.nombre_input = TextInput(hint_text = "Nombre de la persona", multiline = False, height = 140)
         add_person_button = Button(text = "Agregar persona", on_press = self.add_person, height = 140)
         input_area.add_widget(self.nombre_input)
@@ -347,7 +360,7 @@ class Personas_Regalos_Main_Screen(Screen):
             self.add_person_to_list(persona)
 
     def add_person_to_list(self, nombre): 
-        persona_button = Button(text = nombre, pos_hint = {"center_x": 0.5}, size_hint_y = 0.92, height = 300, font_size = '20sp')
+        persona_button = Button(text = nombre, pos_hint = {"center_x": 0.5}, size_hint = (0.92, None), height = 300, font_size = '20sp')
         persona_button.bind(on_press = lambda btn: self.open_person_screen(nombre))
         self.lista_personas.add_widget(persona_button)
     
@@ -377,13 +390,20 @@ class Editar_Personas(Screen):
     def __init__(self, **kw): 
         super().__init__(**kw)
 
-        self.layout = BoxLayout(orientation = 'vertical', padding = (10, 20,10,10), spacing = 20)
+        self.layout = BoxLayout(orientation = 'vertical', padding = (10, 20,10,10), spacing = 40)
         self.add_widget(self.layout)
 
         self.persona_label = Label(text = "", size_hint = (1, 0.1), font_size = "30sp", color = (0,0,0,1 ), size_hint_y = 0.2)
         self.layout.add_widget(self.persona_label)
 
-        input_area = BoxLayout(size_hint = (1, 0.2), spacing = 10, size_hint_y = 0.2)
+        regalo_pasado_layout = BoxLayout(size_hint = (1,0.2), spacing = 10, height = 80) #Falta ajusta el como se ve en la interfaz
+        label_regalo_pasado = Label(text = "Te dieron regalo el año pasado?", size_hint = (5,1), font_size = '20sp', color = (0,0,0,1), halign = 'center')
+        self.check_anio_pasado = CheckBox(size_hint_x = 3) # Falta que se guarde el check
+        regalo_pasado_layout.add_widget(label_regalo_pasado)
+        regalo_pasado_layout.add_widget(self.check_anio_pasado)
+        self.layout.add_widget(regalo_pasado_layout)
+
+        input_area = BoxLayout(size_hint = (1, 0.2), spacing = 10, size_hint_y = 0.2, padding = (50,10,50,10))
         self.regalo_input = TextInput(hint_text = "Ingresa regalo", multiline = False, height = 140)
         agreagar_button = Button(text = "Añadir", on_press = self.add_item, height = 140)
         input_area.add_widget(self.regalo_input)
@@ -393,13 +413,14 @@ class Editar_Personas(Screen):
         self.layout.add_widget(Widget(size_hint_y = 0.08))
 
         self.scroll = ScrollView(size_hint = (1, 0.8))
-        self.checklist = BoxLayout(orientation = 'vertical', size_hint_y = None, spacing = 30)
+        self.checklist = BoxLayout(orientation = 'vertical', size_hint_y = None, spacing = 30, padding = (60,10,60,10))
         self.checklist.bind(minimum_height = self.checklist.setter("height"))
         self.scroll.add_widget(self.checklist)
         self.layout.add_widget(self.scroll)
 
     def set_person_name(self, name):
-        self.persona_label.text = f"Regalos para {name}"
+        self.persona_label.markup = True
+        self.persona_label.text = f"[b]Regalos para {name}[/b]"
         self.checklist.clear_widgets()
 
         if storage.exists(name):
