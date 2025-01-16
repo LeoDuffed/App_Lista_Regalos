@@ -2,7 +2,6 @@
 
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.label import Label
 from kivy.uix.button import Button
@@ -11,6 +10,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen, SlideTransition
 from kivy.uix.progressbar import ProgressBar
 from kivy.uix.checkbox import CheckBox
 from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.widget import Widget
 from kivy.uix.popup import Popup
 from kivy.storage.jsonstore import JsonStore
 from kivy.base import EventLoop
@@ -28,7 +28,7 @@ class Pantalla_Inicio(Screen):
 
         layout = BoxLayout(orientation = 'vertical', padding = 20, spacing = 10)
 
-        reset_button = Button(text = "Reset", size_hint = (0.2,0.05), pos_hint = {'right': 1, 'top': 1})
+        reset_button = Button(text = "Reset", size_hint = (0.3,0.05), pos_hint = {'right': 1, 'top': 1})
         reset_button.bind(on_release = self.reset_lists_buttons)
         main_layout.add_widget(reset_button)
 
@@ -69,7 +69,7 @@ class Pantalla_Inicio(Screen):
 
         content.add_widget(botones)
 
-        popup = Popup(title="Reiniciar App", content=content, size_hint=(0.8, 0.4), auto_dismiss=False)
+        popup = Popup(title="Reiniciar App", content=content, size_hint=(0.9, 0.5), auto_dismiss=False)
         popup.open()
 
     def reset(self, instance):
@@ -383,6 +383,8 @@ class Editar_Personas(Screen):
         input_area.add_widget(agreagar_button)
         self.layout.add_widget(input_area)
 
+        self.layout.add_widget(Widget(size_hint_y = 0.08))
+
         self.scroll = ScrollView(size_hint = (1, 0.8))
         self.checklist = BoxLayout(orientation = 'vertical', size_hint_y = None, spacing = 30)
         self.checklist.bind(minimum_height = self.checklist.setter("height"))
@@ -408,8 +410,9 @@ class Editar_Personas(Screen):
         checkbox = CheckBox(size_hint=(0.2, None), active=marcado, width = 60, height = 60)
         checkbox.bind(on_release=lambda cb: self.update_gift_status(gift_text, cb.active))
 
-        regalo_label = Label(text=gift_text, size_hint=(0.5, None), color=(0, 0, 0, 1), font_size = '20sp', height = '60sp', valign = 'middle', halign = 'center')
+        regalo_label = Label(text=gift_text, size_hint=(0.5, 0.75), color=(0, 0, 0, 1), font_size = '20sp', height = '60sp', valign = 'middle', halign = 'center')
         delete_button = Button(text="Eliminar", size_hint=(0.3, None), width = 100, height = 60, font_size = '18sp')
+        regalo_label.bind(size = regalo_label.setter('text_size'))
         delete_button.bind(on_press=lambda btn: self.remove_gift(gift_layout, gift_text))
 
         gift_layout.add_widget(checkbox)
