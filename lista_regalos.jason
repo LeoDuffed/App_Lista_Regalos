@@ -1,1 +1,1 @@
-{"Leonardo": {"regalos": [{"nombre": "Legos", "marcado": false}, {"nombre": "libros", "marcado": false}]}, "personas": {"lista": [{"nombre": "Leonardo", "max_regalos": 3, "progreso": 0}, {"nombre": "Juls", "max_regalos": 4, "progreso": 0}]}}
+{"personas": {"lista": [{"nombre": "Leonardo", "max_regalos": 3, "progreso": 0}, {"nombre": "Juls", "max_regalos": 3, "progreso": 0}]}, "Leonardo": {"regalos": [{"nombre": "libro", "marcado": true}]}}

@@ -113,8 +113,8 @@ class Pantalla_Presupuesto(Screen):
         self.layout.add_widget(self.presupuesto_inicial)
 
         input_budget = BoxLayout(size_hint = (1, 0.2), spacing = 10, size_hint_y = 0.2)
-        self.budget_input = TextInput(hint_text = "Ingrese su presupuesto", multiline = False)
-        add_budget_button = Button(text = "Añadir presupuesto", on_press = self.add_presupuesto)
+        self.budget_input = TextInput(hint_text = "Ingrese su presupuesto", multiline = False, height = 200)
+        add_budget_button = Button(text = "Añadir presupuesto", on_press = self.add_presupuesto, height = 200)
         input_budget.add_widget(self.budget_input)
         input_budget.add_widget(add_budget_button)
         self.layout.add_widget(input_budget)
@@ -200,13 +200,15 @@ class Pantalla_Aniadir_Lista_Personas(Screen):
         layout.add_widget(welcomerLabel)
 
         input_data = BoxLayout(size_hint = (1, 0.2), spacing = 10, size_hint_y = 0.2)
-        self.name_input = TextInput(hint_text = "Nombre de la persona", multiline = False)
-        self.regalos_cont_input = TextInput(hint_text = "Numero de regalos", multiline = False)
-        add_person_button = Button(text = "Añadir persona", on_press = self.add_person)  
+        self.name_input = TextInput(hint_text = "Nombre de la persona", multiline = False, height = 150)
+        self.regalos_cont_input = TextInput(hint_text = "Numero de regalos", multiline = False,height = 150)
+        add_person_button = Button(text = "Añadir persona", on_press = self.add_person, height = 150)  
         input_data.add_widget(self.name_input)
         input_data.add_widget(self.regalos_cont_input)
         input_data.add_widget(add_person_button)
         layout.add_widget(input_data)
+
+        layout.add_widget(Widget(size_hint_y=0.07))
 
         self.scroll = ScrollView(size_hint = (1, 0.8))
         self.lista_personas = BoxLayout(orientation = 'vertical', size_hint_y = None, spacing = 30)
@@ -249,12 +251,12 @@ class Pantalla_Aniadir_Lista_Personas(Screen):
     def create_person_layout(self, nombre, max_regalos, progreso):
         personas_layout = BoxLayout(size_hint_y = None, height = 80, spacing = 30)
 
-        nombre_label = Label(text=nombre, size_hint=(0.4, 0.9), height = 60, color = (0,0,0,1), font_size = '20sp', valign = 'middle', halign = 'center')
+        nombre_label = Label(text=nombre, size_hint=(0.4, 1.2), height = 60, color = (0,0,0,1), font_size = '25sp', valign = 'middle', halign = 'center')
         nombre_label.bind(size = nombre_label.setter('text_size'))
-        sub_gift_button = Button(text = "-1",size_hint = (None, None), width = 70, height = 70, font_size = '18sp')
-        barra_progreso = ProgressBar(max=max_regalos, value=progreso, size_hint=(0.4, 0.9), height = 40)
-        add_gift_button = Button(text="+1",size_hint = (None, None), width = 70, height = 70, font_size='18sp')
-        delet_button = Button(text = "Eliminar", size_hint=(0.4,None), width = 120, height = 70, font_size='18sp')
+        sub_gift_button = Button(text = "-1",size_hint = (None, None), width = 100, height = 100, font_size = '18sp', valign = 'middle', halign = 'center')
+        barra_progreso = ProgressBar(max=max_regalos, value=progreso, size_hint=(0.4, 1.2), height = 70)
+        add_gift_button = Button(text="+1",size_hint = (None, None), width = 100, height = 100, font_size='18sp', valign = 'middle', halign = 'center')
+        delet_button = Button(text = "Eliminar", size_hint=(0.4,None), width = 120, height = 90, font_size='18sp', valign = 'middle', halign = 'center')
         sub_gift_button.bind(on_press = lambda btn: self.sub_progress(barra_progreso, nombre))
         add_gift_button.bind(on_press=lambda btn: self.add_progress(barra_progreso, nombre))
         delet_button.bind(on_press = lambda btn:self.remove_person(personas_layout, nombre))
@@ -314,11 +316,13 @@ class Personas_Regalos_Main_Screen(Screen):
         self.layout.add_widget(instruction_label)
 
         input_area = BoxLayout(size_hint = (1, 0.2), spacing = 10)
-        self.nombre_input = TextInput(hint_text = "Nombre de la persona", multiline = False)
-        add_person_button = Button(text = "Agregar persona", on_press = self.add_person)
+        self.nombre_input = TextInput(hint_text = "Nombre de la persona", multiline = False, height = 200)
+        add_person_button = Button(text = "Agregar persona", on_press = self.add_person, height = 200)
         input_area.add_widget(self.nombre_input)
         input_area.add_widget(add_person_button)
         self.layout.add_widget(input_area)
+
+        self.layout.add_widget(Widget(size_hint_y = 0.2))
 
         self.scroll = ScrollView(size_hint = (1,0.8))
         self.lista_personas = BoxLayout(orientation = 'vertical', size_hint_y = None, spacing = 20)
@@ -377,8 +381,8 @@ class Editar_Personas(Screen):
         self.layout.add_widget(self.persona_label)
 
         input_area = BoxLayout(size_hint = (1, 0.2), spacing = 10, size_hint_y = 0.2)
-        self.regalo_input = TextInput(hint_text = "Ingresa regalo", multiline = False)
-        agreagar_button = Button(text = "Añadir", on_press = self.add_item)
+        self.regalo_input = TextInput(hint_text = "Ingresa regalo", multiline = False, height = 200)
+        agreagar_button = Button(text = "Añadir", on_press = self.add_item, height = 200)
         input_area.add_widget(self.regalo_input)
         input_area.add_widget(agreagar_button)
         self.layout.add_widget(input_area)
@@ -411,7 +415,7 @@ class Editar_Personas(Screen):
         checkbox.bind(on_release=lambda cb: self.update_gift_status(gift_text, cb.active))
 
         regalo_label = Label(text=gift_text, size_hint=(0.5, 0.75), color=(0, 0, 0, 1), font_size = '20sp', height = '60sp', valign = 'middle', halign = 'center')
-        delete_button = Button(text="Eliminar", size_hint=(0.3, None), width = 100, height = 60, font_size = '18sp')
+        delete_button = Button(text="Eliminar", size_hint=(0.3, None), width = 120, height = 60, font_size = '18sp')
         regalo_label.bind(size = regalo_label.setter('text_size'))
         delete_button.bind(on_press=lambda btn: self.remove_gift(gift_layout, gift_text))
 
