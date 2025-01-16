@@ -113,15 +113,15 @@ class Pantalla_Presupuesto(Screen):
         self.layout.add_widget(self.presupuesto_inicial)
 
         input_budget = BoxLayout(size_hint = (1, 0.2), spacing = 10, size_hint_y = 0.2)
-        self.budget_input = TextInput(hint_text = "Ingrese su presupuesto", multiline = False, height = 200)
-        add_budget_button = Button(text = "Añadir presupuesto", on_press = self.add_presupuesto, height = 200)
+        self.budget_input = TextInput(hint_text = "Ingrese su presupuesto", multiline = False, height = 150)
+        add_budget_button = Button(text = "Añadir presupuesto", on_press = self.add_presupuesto, height = 150)
         input_budget.add_widget(self.budget_input)
         input_budget.add_widget(add_budget_button)
         self.layout.add_widget(input_budget)
 
         input_gasto_layout = BoxLayout(size_hint = (1, 0.2), spacing = 10, size_hint_y = 0.2)
-        self.gasto_input = TextInput(hint_text = "Ingrese lo gastado", multiline = False)
-        add_gasto_button = Button(text = "Agrega gasto", on_press = self.sub_gasto)
+        self.gasto_input = TextInput(hint_text = "Ingrese lo gastado", multiline = False, height = 150)
+        add_gasto_button = Button(text = "Agrega gasto", on_press = self.sub_gasto, height = 150)
         input_gasto_layout.add_widget(self.gasto_input)
         input_gasto_layout.add_widget(add_gasto_button)
         self.layout.add_widget(input_gasto_layout) 
@@ -200,9 +200,9 @@ class Pantalla_Aniadir_Lista_Personas(Screen):
         layout.add_widget(welcomerLabel)
 
         input_data = BoxLayout(size_hint = (1, 0.2), spacing = 10, size_hint_y = 0.2)
-        self.name_input = TextInput(hint_text = "Nombre de la persona", multiline = False, height = 150)
-        self.regalos_cont_input = TextInput(hint_text = "Numero de regalos", multiline = False,height = 150)
-        add_person_button = Button(text = "Añadir persona", on_press = self.add_person, height = 150)  
+        self.name_input = TextInput(hint_text = "Nombre de la persona", multiline = False, height = 120)
+        self.regalos_cont_input = TextInput(hint_text = "Numero de regalos", multiline = False,height = 120)
+        add_person_button = Button(text = "Añadir persona", on_press = self.add_person, height = 120)  
         input_data.add_widget(self.name_input)
         input_data.add_widget(self.regalos_cont_input)
         input_data.add_widget(add_person_button)
@@ -212,6 +212,8 @@ class Pantalla_Aniadir_Lista_Personas(Screen):
 
         self.scroll = ScrollView(size_hint = (1, 0.8))
         self.lista_personas = BoxLayout(orientation = 'vertical', size_hint_y = None, spacing = 30)
+        empty_label = Label(text = "", size_hint_y = None, height = 50)
+        self.lista_personas.add_widget(empty_label)
         self.lista_personas.bind(minimum_height = self.lista_personas.setter('height'))
         self.scroll.add_widget(self.lista_personas)
         layout.add_widget(self.scroll)
@@ -251,7 +253,7 @@ class Pantalla_Aniadir_Lista_Personas(Screen):
     def create_person_layout(self, nombre, max_regalos, progreso):
         personas_layout = BoxLayout(size_hint_y = None, height = 80, spacing = 30)
 
-        nombre_label = Label(text=nombre, size_hint=(0.4, 1.2), height = 60, color = (0,0,0,1), font_size = '25sp', valign = 'middle', halign = 'center')
+        nombre_label = Label(text=nombre, size_hint=(0.4, 1.2), height = 60, color = (0,0,0,1), font_size = '20sp', valign = 'middle', halign = 'center')
         nombre_label.bind(size = nombre_label.setter('text_size'))
         sub_gift_button = Button(text = "-1",size_hint = (None, None), width = 100, height = 100, font_size = '18sp', valign = 'middle', halign = 'center')
         barra_progreso = ProgressBar(max=max_regalos, value=progreso, size_hint=(0.4, 1.2), height = 70)
@@ -316,8 +318,8 @@ class Personas_Regalos_Main_Screen(Screen):
         self.layout.add_widget(instruction_label)
 
         input_area = BoxLayout(size_hint = (1, 0.2), spacing = 10)
-        self.nombre_input = TextInput(hint_text = "Nombre de la persona", multiline = False, height = 200)
-        add_person_button = Button(text = "Agregar persona", on_press = self.add_person, height = 200)
+        self.nombre_input = TextInput(hint_text = "Nombre de la persona", multiline = False, height = 140)
+        add_person_button = Button(text = "Agregar persona", on_press = self.add_person, height = 140)
         input_area.add_widget(self.nombre_input)
         input_area.add_widget(add_person_button)
         self.layout.add_widget(input_area)
@@ -381,8 +383,8 @@ class Editar_Personas(Screen):
         self.layout.add_widget(self.persona_label)
 
         input_area = BoxLayout(size_hint = (1, 0.2), spacing = 10, size_hint_y = 0.2)
-        self.regalo_input = TextInput(hint_text = "Ingresa regalo", multiline = False, height = 200)
-        agreagar_button = Button(text = "Añadir", on_press = self.add_item, height = 200)
+        self.regalo_input = TextInput(hint_text = "Ingresa regalo", multiline = False, height = 140)
+        agreagar_button = Button(text = "Añadir", on_press = self.add_item, height = 140)
         input_area.add_widget(self.regalo_input)
         input_area.add_widget(agreagar_button)
         self.layout.add_widget(input_area)
