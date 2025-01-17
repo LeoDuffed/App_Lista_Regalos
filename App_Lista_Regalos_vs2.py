@@ -396,13 +396,6 @@ class Editar_Personas(Screen):
         self.persona_label = Label(text = "", size_hint = (1, 0.1), font_size = "30sp", color = (0,0,0,1 ), size_hint_y = 0.2)
         self.layout.add_widget(self.persona_label)
 
-        regalo_pasado_layout = BoxLayout(size_hint = (1,0.2), spacing = 10, height = 80) #Falta ajusta el como se ve en la interfaz
-        label_regalo_pasado = Label(text = "Te dieron regalo el año pasado?", size_hint = (5,1), font_size = '20sp', color = (0,0,0,1), halign = 'center')
-        self.check_anio_pasado = CheckBox(size_hint_x = 3) # Falta que se guarde el check
-        regalo_pasado_layout.add_widget(label_regalo_pasado)
-        regalo_pasado_layout.add_widget(self.check_anio_pasado)
-        self.layout.add_widget(regalo_pasado_layout)
-
         input_area = BoxLayout(size_hint = (1, 0.2), spacing = 10, size_hint_y = 0.2, padding = (50,10,50,10))
         self.regalo_input = TextInput(hint_text = "Ingresa regalo", multiline = False, height = 140)
         agreagar_button = Button(text = "Añadir", on_press = self.add_item, height = 140)
