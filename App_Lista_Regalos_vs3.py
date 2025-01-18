@@ -235,7 +235,7 @@ class Personas_Regalos_Main_Screen(Screen):
     
     def add_person(self, instance):
         nombre = self.nombre_input.text.strip()
-        if nombre: 
+        if nombre:
             persona_button = Button(text = nombre,  pos_hint = {"center_x": 0.5}, size_hint = (0.92, None), height = 300, font_size = '20sp')
             persona_button.bind(on_press = lambda btn: self.open_person_screen(nombre))
             self.lista_personas.add_widget(persona_button)
@@ -272,6 +272,13 @@ class Editar_Personas(Screen):
         regalo_pasado_layout.add_widget(self.check_anio_pasado)
         self.layout.add_widget(regalo_pasado_layout)
 
+        barra_layout = BoxLayout( size_hint = (1, 0.2), spacing = 10, size_hint_y = 0.2, padding = (50,3,50,3))
+        self.progrso_label = Label(text = "", font_size = "20sp", color = (0,0,0,1), halign ="center")
+        self.barra_progreso = ProgressBar(height = 70)
+        barra_layout.add_widget(self.progrso_label)
+        barra_layout.add_widget(self.barra_progreso)
+        self.layout.add_widget(barra_layout)
+
         input_area = BoxLayout(size_hint = (1, 0.2), spacing = 10, size_hint_y = 0.2, padding = (50,10,50,10))
         self.regalo_input = TextInput(hint_text = "Ingresa regalo", multiline = False, height = 140)
         agreagar_button = Button(text = "Añadir", on_press = self.add_item, height = 140)
@@ -289,7 +296,8 @@ class Editar_Personas(Screen):
 
     def set_person_name(self, name):
         self.persona_label.markup = True
-        self.persona_label.text = f"[b]Regalos para {name}[/b]"
+        self.persona_label.text = f"Regalos para {name}"
+        self.progrso_label.text = f"Progreso {name}"
         self.checklist.clear_widgets()
 
         if storage.exists(name):
