@@ -374,6 +374,7 @@ class Editar_Personas(Screen):
             app.root.current = 'AddPerson'
 
 
+
 class Lista_Regalos(App):
     def build(self):
         
