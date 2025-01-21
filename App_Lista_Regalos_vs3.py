@@ -259,7 +259,7 @@ class Editar_Personas(Screen):
 
         self.persona_nombre = persona_nombre
 
-        self.layout = BoxLayout(orientation = 'vertical', padding = (10, 20,10,10), spacing = 40)
+        self.layout = BoxLayout(orientation = 'vertical', padding = (10, 20,10,10), spacing = 20)
         self.add_widget(self.layout)
 
         self.persona_label = Label(text = f"Regalos para {self.persona_nombre}", size_hint = (1, 0.1), font_size = "30sp", color = (0,0,0,1 ), size_hint_y = 0.2,font_name="Roboto-Bold.ttf")
@@ -302,25 +302,37 @@ class Editar_Personas(Screen):
             data = storage.get(self.persona_nombre)
             regalos = data.get('regalos', [])
             self.barra_progreso.max = len(regalos)
-            self.barra_progreso.value = sum(1 for regalo in regalos if regalo.get("marcado", False))
+            self.barra_progreso.value = sum(0.5 * regalo.get("comprado", False) + 0.5 * regalo.get("envuelto", False) for regalo in regalos )
             self.check_anio_pasado.active = data.get('regalo_pasado', False)
 
-            for regalo in regalos:
-                gift_layout = self.create_gift_widget(regalo["nombre"], regalo.get("marcado", False))
+            for regalo in regalos: 
+                gift_layout = self.create_gift_widget(gift_text=regalo["nombre"], comprado = regalo.get("comprado", False), envuelto= regalo.get("envuelto", False))
                 self.checklist.add_widget(gift_layout)
 
-    def create_gift_widget(self, gift_text, marcado):
+    def create_gift_widget(self, gift_text, comprado, envuelto):
         gift_layout = BoxLayout(size_hint_y=None, height=80, spacing=30)
 
-        checkbox = CheckBox(size_hint=(0.2, None), active=marcado, width = 60, height = 60)
-        checkbox.bind(on_release=lambda cb: self.update_gift_status(gift_text, cb.active))
+        checkbox_layout = BoxLayout(orientation ='vertical', size_hint = (0.2, None), height = 80, spacing = 5)
+
+        comprado_label = Label(text = "comprado", font_size = "15sp", color = (0,0,0,1), size_hint=(1, 0.5))
+        envuelto_label = Label(text = "envuelto", font_size = "15sp", color = (0,0,0,1), size_hint=(1, 0.5)) 
+
+        checkbox_comprado = CheckBox(size_hint=(1, 0.5), active=comprado, width = 50, height = 50)
+        checkbox_comprado.bind(on_release=lambda cb: self.update_gift_status(gift_text,"comprado", cb.active))
+        checkbox_envuelto = CheckBox(size_hint = (1, 0.5), width = 50, height = 50, active = envuelto)
+        checkbox_envuelto.bind(on_release = lambda cb: self.update_gift_status(gift_text,"envuelto", cb.active))
+
+        checkbox_layout.add_widget(comprado_label)
+        checkbox_layout.add_widget(checkbox_comprado)
+        checkbox_layout.add_widget(envuelto_label)
+        checkbox_layout.add_widget(checkbox_envuelto)
 
         regalo_label = Label(text=gift_text, size_hint=(0.5, 0.75), color=(0, 0, 0, 1), font_size = '20sp', height = '60sp', valign = 'middle', halign = 'center')
         delete_button = Button(text="Eliminar", size_hint=(0.3, None), width = 120, height = 60, font_size = '18sp')
         regalo_label.bind(size = regalo_label.setter('text_size'))
         delete_button.bind(on_press=lambda btn: self.remove_gift(gift_layout, gift_text))
 
-        gift_layout.add_widget(checkbox)
+        gift_layout.add_widget(checkbox_layout)
         gift_layout.add_widget(regalo_label)
         gift_layout.add_widget(delete_button)
         return gift_layout
@@ -331,30 +343,30 @@ class Editar_Personas(Screen):
             data['regalo_pasado'] = self.check_anio_pasado.active
             storage.put(self.persona_nombre, **data)
 
-    def update_gift_status(self, gift_text, marcado):
+    def update_gift_status(self, gift_text, key, marcado):
         if storage.exists(self.persona_nombre):
             data = storage.get(self.persona_nombre)
             regalos = data.get('regalos', [])
             for regalo in regalos:
                 if regalo["nombre"] == gift_text:
-                    regalo["marcado"] = marcado
+                    regalo[key] = marcado
                     break
             
             storage.put(self.persona_nombre, regalos = regalos)
-            self.barra_progreso.value = sum(1 for regalo in regalos if regalo.get("marcado", False))
+            self.barra_progreso.value = sum(0.5 * regalo.get("comprado", False) + 0.5 * regalo.get("envuelto", False) for regalo in regalos)
 
     def add_item(self, instance):
         gift_text = self.regalo_input.text.strip()
 
         if gift_text:
-            gift_layout = self.create_gift_widget(gift_text, False)
+            gift_layout = self.create_gift_widget(gift_text, False, False)
             self.checklist.add_widget(gift_layout)
 
             if not storage.exists(self.persona_nombre):
                 storage.put(self.persona_nombre, regalos=[])
             data = storage.get(self.persona_nombre)
             regalos = data.get('regalos', [])
-            regalos.append({"nombre": gift_text, "marcado": False})
+            regalos.append({"nombre": gift_text, "comprado": False, "envuelto": False})
             storage.put(self.persona_nombre, regalos = regalos)
 
             self.barra_progreso.max = len(regalos)
@@ -370,7 +382,7 @@ class Editar_Personas(Screen):
             storage.put(self.persona_nombre, regalos = regalos)
 
             self.barra_progreso.max = len(regalos)
-            self.barra_progreso.value = sum(1 for regalo in regalos if regalo.get("marcado", False)) 
+            self.barra_progreso.value = sum(0.5 * regalo.get("comprado", False) + 0.5 * regalo.get("envuelto", False) for regalo in regalos)
     
     def on_touch_move(self, touch): 
         app = App.get_running_app() 
