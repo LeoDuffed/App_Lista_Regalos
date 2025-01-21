@@ -373,7 +373,6 @@ class Editar_Personas(Screen):
             app.root.transition = SlideTransition(direction = "right")
             app.root.current = 'AddPerson'
 
-# quitar este espacio 
 
 class Lista_Regalos(App):
     def build(self):
