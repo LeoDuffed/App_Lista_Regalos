@@ -267,7 +267,8 @@ class Editar_Personas(Screen):
 
         regalo_pasado_layout = BoxLayout(size_hint = (1,0.2), spacing = 10, height = 80) #Falta ajusta el como se ve en la interfaz
         label_regalo_pasado = Label(text = "Te dieron regalo el año pasado?", size_hint = (5,1), font_size = '20sp', color = (0,0,0,1), halign = 'center')
-        self.check_anio_pasado = CheckBox(size_hint_x = 3) # Falta que se guarde el check
+        self.check_anio_pasado = CheckBox(size_hint_x = 3) 
+        self.check_anio_pasado.bind(on_release=self.save_check_anio_pasado)
         regalo_pasado_layout.add_widget(label_regalo_pasado)
         regalo_pasado_layout.add_widget(self.check_anio_pasado)
         self.layout.add_widget(regalo_pasado_layout)
@@ -297,16 +298,23 @@ class Editar_Personas(Screen):
     def set_person_name(self, name):
         self.persona_label.markup = True
         self.persona_label.text = f"Regalos para {name}"
-        self.progrso_label.text = f"Progreso {name}"
+        self.progrso_label.text = f"Progreso de regalos"
         self.checklist.clear_widgets()
 
         if storage.exists(name):
-            regalos = storage.get(name)['regalos']
-            for regalo in regalos:
-                if isinstance(regalo, dict):
-                    gift_layout = self.create_gift_widget(regalo["nombre"], regalo.get("marcado", False))
-                else:
-                    gift_layout = self.create_gift_widget(regalo, False)
+            data = storage.get(name)
+            regalos = data.get('regalos', [])
+            max_regalos = len(regalos)
+            completados = sum(1 for regalo in regalos if regalo.get("marcado", False))
+            
+            self.barra_progreso.max = max_regalos
+            self.barra_progreso.value = completados
+
+            regalo_pasado = data.get('regalo_pasado', False)
+            self.check_anio_pasado.active = regalo_pasado
+
+            for regalo in regalos: 
+                gift_layout = self.create_gift_widget(regalo["nombre"], regalo.get("marcado", False))
                 self.checklist.add_widget(gift_layout)
 
     def create_gift_widget(self, gift_text, marcado):
@@ -324,17 +332,27 @@ class Editar_Personas(Screen):
         gift_layout.add_widget(regalo_label)
         gift_layout.add_widget(delete_button)
         return gift_layout
+    
+    def save_check_anio_pasado(self, instance): 
+        persona = self.persona_label.text.replace("Regalos para ", "").strip()
+        if storage.exists(persona): 
+            data= storage.get(persona)
+            data['regalo_pasado'] = self.check_anio_pasado.active
+            storage.put(persona, **data)
 
     def update_gift_status(self, gift_text, marcado):
         persona = self.persona_label.text.replace("Regalos para ", "").strip()
         if storage.exists(persona):
             regalos = storage.get(persona)['regalos']
             for regalo in regalos:
-                if isinstance(regalo, dict) and regalo["nombre"] == gift_text:
+                if regalo["nombre"] == gift_text:
                     regalo["marcado"] = marcado
                     break
-            storage.put(persona, regalos=regalos)
+            
+            storage.put(persona, regalos = regalos)
 
+            completado = sum(1 for regalo in regalos if regalo.get("marcado", False))
+            self.barra_progreso.value = completado
     def add_item(self, instance):
         gift_text = self.regalo_input.text.strip()
 
@@ -350,6 +368,8 @@ class Editar_Personas(Screen):
             regalos.append({"nombre": gift_text, "marcado": False})
             storage.put(persona, regalos=regalos)
 
+            self.barra_progreso.max+= 1
+
             self.regalo_input.text = ""
 
     def remove_gift(self, item_layout, gift_text):
@@ -360,6 +380,9 @@ class Editar_Personas(Screen):
             regalos = storage.get(persona)['regalos']
             regalos = [regalo for regalo in regalos if isinstance(regalo, dict) and regalo["nombre"] != gift_text]
             storage.put(persona, regalos=regalos)
+
+            self.barra_progreso.max -=1
+            self.barra_progreso.value = sum(1 for regalo in regalos if regalo.get("marcado", False)) 
     
     def on_touch_move(self, touch): 
         app = App.get_running_app() 
