@@ -80,6 +80,11 @@ class Pantalla_Inicio(Screen):
         for screen in app.root.screens:
             if hasattr(screen, "lista_personas"):
                 screen.lista_personas.clear_widgets()
+            if hasattr(screen, "check_anio_pasado"):
+                screen.check_anio_pasado.active = False
+            if hasattr(screen, "barra_progreso"):
+                screen.barra_progreso.max = 0
+                screen.barra_progreso.value = 0
 
         presupuesto_screen = app.root.get_screen('presupuesto')
         presupuesto_screen.presupuesto_inicial.text = "Presupuesto no definido"
@@ -195,9 +200,7 @@ class Personas_Regalos_Main_Screen(Screen):
 
         self.layout = BoxLayout(orientation = 'vertical', padding = (10, 50,10,30), spacing = 10)
 
-        instruction_label = Label (text = "", font_size = '30sp', color = (0,0,0,1), size_hint_y = 0.3)
-        instruction_label.markup = True
-        instruction_label.text = f"[b]Agrega a las personas[/b]"
+        instruction_label = Label (text = f"[b]Agrega a las personas[/b]", font_size = '30sp', color = (0,0,0,1), size_hint_y = 0.3, markup = True)
         self.layout.add_widget(instruction_label)
 
         input_area = BoxLayout(size_hint = (1, 0.2), spacing = 10, padding = (50,10,50,10))
@@ -221,10 +224,8 @@ class Personas_Regalos_Main_Screen(Screen):
 
     def load_personas(self): 
         for persona in storage.keys(): 
-            if persona == "personas": 
-                continue
-            if persona == "budget":
-                continue
+            if persona in ["personas", "budget"]:
+                continue 
 
             self.add_person_to_list(persona)
 
@@ -236,17 +237,12 @@ class Personas_Regalos_Main_Screen(Screen):
     def add_person(self, instance):
         nombre = self.nombre_input.text.strip()
         if nombre:
-            persona_button = Button(text = nombre,  pos_hint = {"center_x": 0.5}, size_hint = (0.92, None), height = 300, font_size = '20sp')
-            persona_button.bind(on_press = lambda btn: self.open_person_screen(nombre))
-            self.lista_personas.add_widget(persona_button)
+            self.add_person_to_list(nombre)
             self.nombre_input.text = ""
 
     def open_person_screen(self, nombre):
         app = App.get_running_app()
-        persona_screen = app.root.get_screen('person_screen')
-        persona_screen.set_person_name(nombre)
-        app.root.transition = SlideTransition(direction = "left")
-        app.root.current = 'person_screen'
+        app.open_person_screen(nombre)
     
     def on_touch_move(self, touch): 
         app = App.get_running_app() 
@@ -256,13 +252,15 @@ class Personas_Regalos_Main_Screen(Screen):
 
 
 class Editar_Personas(Screen):
-    def __init__(self, **kw): 
-        super().__init__(**kw)
+    def __init__(self, persona_nombre, **kwargs): 
+        super().__init__(**kwargs)
+
+        self.persona_nombre = persona_nombre
 
         self.layout = BoxLayout(orientation = 'vertical', padding = (10, 20,10,10), spacing = 40)
         self.add_widget(self.layout)
 
-        self.persona_label = Label(text = "", size_hint = (1, 0.1), font_size = "30sp", color = (0,0,0,1 ), size_hint_y = 0.2,font_name="Roboto-Bold.ttf")
+        self.persona_label = Label(text = f"Regalos para {self.persona_nombre}", size_hint = (1, 0.1), font_size = "30sp", color = (0,0,0,1 ), size_hint_y = 0.2,font_name="Roboto-Bold.ttf")
         self.layout.add_widget(self.persona_label)
 
         regalo_pasado_layout = BoxLayout(size_hint = (1,0.2), spacing = 10, height = 80) #Falta ajusta el como se ve en la interfaz
@@ -274,8 +272,8 @@ class Editar_Personas(Screen):
         self.layout.add_widget(regalo_pasado_layout)
 
         barra_layout = BoxLayout( size_hint = (1, 0.2), spacing = 10, size_hint_y = 0.2, padding = (50,3,50,3))
-        self.progrso_label = Label(text = "", font_size = "20sp", color = (0,0,0,1), halign ="center")
-        self.barra_progreso = ProgressBar(height = 70)
+        self.progrso_label = Label(text = "Progreso regalo", font_size = "20sp", color = (0,0,0,1), halign ="center")
+        self.barra_progreso = ProgressBar(height = 200)
         barra_layout.add_widget(self.progrso_label)
         barra_layout.add_widget(self.barra_progreso)
         self.layout.add_widget(barra_layout)
@@ -295,25 +293,17 @@ class Editar_Personas(Screen):
         self.scroll.add_widget(self.checklist)
         self.layout.add_widget(self.scroll)
 
-    def set_person_name(self, name):
-        self.persona_label.markup = True
-        self.persona_label.text = f"Regalos para {name}"
-        self.progrso_label.text = f"Progreso de regalos"
-        self.checklist.clear_widgets()
+        self.load_person_data()
 
-        if storage.exists(name):
-            data = storage.get(name)
+    def load_person_data(self):
+        if storage.exists(self.persona_nombre):
+            data = storage.get(self.persona_nombre)
             regalos = data.get('regalos', [])
-            max_regalos = len(regalos)
-            completados = sum(1 for regalo in regalos if regalo.get("marcado", False))
-            
-            self.barra_progreso.max = max_regalos
-            self.barra_progreso.value = completados
+            self.barra_progreso.max = len(regalos)
+            self.barra_progreso.value = sum(1 for regalo in regalos if regalo.get("marcado", False))
+            self.check_anio_pasado.active = data.get('regalo_pasado', False)
 
-            regalo_pasado = data.get('regalo_pasado', False)
-            self.check_anio_pasado.active = regalo_pasado
-
-            for regalo in regalos: 
+            for regalo in regalos:
                 gift_layout = self.create_gift_widget(regalo["nombre"], regalo.get("marcado", False))
                 self.checklist.add_widget(gift_layout)
 
@@ -334,54 +324,50 @@ class Editar_Personas(Screen):
         return gift_layout
     
     def save_check_anio_pasado(self, instance): 
-        persona = self.persona_label.text.replace("Regalos para ", "").strip()
-        if storage.exists(persona): 
-            data= storage.get(persona)
+        if storage.exists(self.persona_nombre):
+            data = storage.get(self.persona_nombre)
             data['regalo_pasado'] = self.check_anio_pasado.active
-            storage.put(persona, **data)
+            storage.put(self.persona_nombre, **data)
 
     def update_gift_status(self, gift_text, marcado):
-        persona = self.persona_label.text.replace("Regalos para ", "").strip()
-        if storage.exists(persona):
-            regalos = storage.get(persona)['regalos']
+        if storage.exists(self.persona_nombre):
+            data = storage.get(self.persona_nombre)
+            regalos = data.get('regalos', [])
             for regalo in regalos:
                 if regalo["nombre"] == gift_text:
                     regalo["marcado"] = marcado
                     break
             
-            storage.put(persona, regalos = regalos)
+            storage.put(self.persona_nombre, regalos = regalos)
+            self.barra_progreso.value = sum(1 for regalo in regalos if regalo.get("marcado", False))
 
-            completado = sum(1 for regalo in regalos if regalo.get("marcado", False))
-            self.barra_progreso.value = completado
     def add_item(self, instance):
         gift_text = self.regalo_input.text.strip()
 
         if gift_text:
-            persona = self.persona_label.text.replace("Regalos para ", "").strip()
-
             gift_layout = self.create_gift_widget(gift_text, False)
             self.checklist.add_widget(gift_layout)
 
-            if not storage.exists(persona):
-                storage.put(persona, regalos=[])
-            regalos = storage.get(persona)['regalos']
+            if not storage.exists(self.persona_nombre):
+                storage.put(self.persona_nombre, regalos=[])
+            data = storage.get(self.persona_nombre)
+            regalos = data.get('regalos', [])
             regalos.append({"nombre": gift_text, "marcado": False})
-            storage.put(persona, regalos=regalos)
+            storage.put(self.persona_nombre, regalos = regalos)
 
-            self.barra_progreso.max+= 1
-
+            self.barra_progreso.max = len(regalos)
             self.regalo_input.text = ""
 
     def remove_gift(self, item_layout, gift_text):
         self.checklist.remove_widget(item_layout)
         
-        persona = self.persona_label.text.replace("Regalos para ", "").strip()
-        if storage.exists(persona):
-            regalos = storage.get(persona)['regalos']
-            regalos = [regalo for regalo in regalos if isinstance(regalo, dict) and regalo["nombre"] != gift_text]
-            storage.put(persona, regalos=regalos)
+        if storage.exists(self.persona_nombre):
+            data = storage.get(self.persona_nombre)
+            regalos = data.get('regalos', [])
+            regalos = [regalo for regalo in regalos if regalo["nombre"] != gift_text]
+            storage.put(self.persona_nombre, regalos = regalos)
 
-            self.barra_progreso.max -=1
+            self.barra_progreso.max = len(regalos)
             self.barra_progreso.value = sum(1 for regalo in regalos if regalo.get("marcado", False)) 
     
     def on_touch_move(self, touch): 
@@ -400,16 +386,26 @@ class Editar_Personas(Screen):
 class Lista_Regalos(App):
     def build(self):
         
-        sm = ScreenManager()
-        sm.add_widget(Pantalla_Inicio(name = 'inicio'))
-        sm.add_widget(Pantalla_Presupuesto(name = 'presupuesto'))
-        sm.add_widget(Personas_Regalos_Main_Screen(name = 'AddPerson'))
-        sm.add_widget(Editar_Personas(name = 'person_screen'))
+        self.sm = ScreenManager()
+        self.sm.add_widget(Pantalla_Inicio(name = 'inicio'))
+        self.sm.add_widget(Pantalla_Presupuesto(name = 'presupuesto'))
+        self.sm.add_widget(Personas_Regalos_Main_Screen(name = 'AddPerson'))
 
         if platform == 'android': 
             EventLoop.window.bind(on_keyboard = self.android_back_button)
 
-        return sm
+        return self.sm
+    
+    def open_person_screen(self, nombre):
+        screen_name = f'person_screen_{nombre}'
+        if screen_name not in [screen.name for screen in self.sm.screens]:
+
+            new_screen = Editar_Personas(name = screen_name, persona_nombre = nombre)
+            self.sm.add_widget(new_screen)
+
+        self.sm.transition = SlideTransition(direction = "left")
+        self.sm.current = screen_name
+
     def android_back_button(self, window, key, *args): 
         if key == 27: 
             screen_manager = self.root
@@ -420,7 +416,6 @@ class Lista_Regalos(App):
                 return True
             return False
 
-    
     def on_stop(self):
         return super().on_stop()
 
