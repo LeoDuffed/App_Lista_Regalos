@@ -130,7 +130,7 @@ class Pantalla_Presupuesto(Screen):
         input_gasto_layout.add_widget(add_gasto_button)
         self.layout.add_widget(input_gasto_layout) 
 
-        self.budget_track_label = Label(text = "", font_size = '30sp', color = (0,0,0,1), halign = 'center', height = 30, size_hint_y = 0.3)
+        self.budget_track_label = Label(text = "", font_size = '25sp', color = (0,0,0,1), halign = 'center', height = 30, size_hint_y = 0.3)
         self.layout.add_widget(self.budget_track_label)
 
         self.add_widget(self.layout)
@@ -266,7 +266,7 @@ class Editar_Personas(Screen):
         self.layout.add_widget(self.persona_label)
 
         regalo_pasado_layout = BoxLayout(size_hint = (1,0.2), spacing = 10, height = 80) #Falta ajusta el como se ve en la interfaz
-        label_regalo_pasado = Label(text = "Te dieron regalo el año pasado?", size_hint = (5,1), font_size = '20sp', color = (0,0,0,1), halign = 'center')
+        label_regalo_pasado = Label(text = "Te regalaron el año pasado?", size_hint = (5,1), font_size = '15sp', color = (0,0,0,1), halign = 'center')
         self.check_anio_pasado = CheckBox(size_hint_x = 3) 
         self.check_anio_pasado.bind(on_release=self.save_check_anio_pasado)
         regalo_pasado_layout.add_widget(label_regalo_pasado)
