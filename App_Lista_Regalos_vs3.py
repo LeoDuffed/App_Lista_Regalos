@@ -27,7 +27,6 @@ class Pantalla_Inicio(Screen):
 
         Window.clearcolor = (1,1,1,1)
 
-
         main_layout = FloatLayout()
 
         layout = BoxLayout(orientation = 'vertical', padding = 20, spacing = 10)
@@ -138,7 +137,6 @@ class Pantalla_Presupuesto(Screen):
         self.load_budget(self)
 
     def add_presupuesto(self, instance): 
-
         try: 
             budget = float(self.budget_input.text)
             storage.put("budget", total = budget, initial = budget)
@@ -151,7 +149,6 @@ class Pantalla_Presupuesto(Screen):
             return 
         
     def sub_gasto(self, instance): 
-
         try: 
             gasto = float(self.gasto_input.text)
         except ValueError: 
