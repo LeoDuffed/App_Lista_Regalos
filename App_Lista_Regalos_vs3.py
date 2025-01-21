@@ -194,6 +194,7 @@ class Pantalla_Presupuesto(Screen):
         if touch.dx > 50: 
             self.manager.current = 'inicio'
 
+
 class Personas_Regalos_Main_Screen(Screen):
     def __init__(self, **kw):
         super().__init__(**kw)
