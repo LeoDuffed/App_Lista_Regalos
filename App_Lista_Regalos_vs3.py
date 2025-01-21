@@ -192,6 +192,12 @@ class Pantalla_Presupuesto(Screen):
         if touch.dx > 50: 
             self.manager.current = 'inicio'
 
+    def on_pre_leave(self): 
+        if platform == 'android':
+            app = App.get_running_app() 
+            app.root.transition = SlideTransition(direction = "right")
+            app.root.current = 'inicio'
+
 
 class Personas_Regalos_Main_Screen(Screen):
     def __init__(self, **kw):
@@ -248,6 +254,12 @@ class Personas_Regalos_Main_Screen(Screen):
         app.root.transition = SlideTransition(direction = "right")
         if touch.dx > 50: 
             self.manager.current = 'inicio'
+
+    def on_pre_leave(self): 
+        if platform == 'android':
+            app = App.get_running_app() 
+            app.root.transition = SlideTransition(direction = "right")
+            app.root.current = 'inicio'
 
 
 class Editar_Personas(Screen):
@@ -416,16 +428,6 @@ class Lista_Regalos(App):
 
         self.sm.transition = SlideTransition(direction = "left")
         self.sm.current = screen_name
-
-    def android_back_button(self, window, key, *args): 
-        if key == 27: 
-            screen_manager = self.root
-            if screen_manager.current != 'inicio': 
-                app = App.get_running_app() 
-                app.root.transition = SlideTransition(direction = "right")
-                screen_manager.current = 'inicio'
-                return True
-            return False
 
     def on_stop(self):
         return super().on_stop()
