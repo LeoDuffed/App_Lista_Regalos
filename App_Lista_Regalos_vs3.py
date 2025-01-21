@@ -262,7 +262,7 @@ class Editar_Personas(Screen):
         self.layout = BoxLayout(orientation = 'vertical', padding = (10, 20,10,10), spacing = 40)
         self.add_widget(self.layout)
 
-        self.persona_label = Label(text = "", size_hint = (1, 0.1), font_size = "30sp", color = (0,0,0,1 ), size_hint_y = 0.2)
+        self.persona_label = Label(text = "", size_hint = (1, 0.1), font_size = "30sp", color = (0,0,0,1 ), size_hint_y = 0.2,font_name="Roboto-Bold.ttf")
         self.layout.add_widget(self.persona_label)
 
         regalo_pasado_layout = BoxLayout(size_hint = (1,0.2), spacing = 10, height = 80) #Falta ajusta el como se ve en la interfaz
@@ -374,7 +374,7 @@ class Editar_Personas(Screen):
 
     def remove_gift(self, item_layout, gift_text):
         self.checklist.remove_widget(item_layout)
-
+        
         persona = self.persona_label.text.replace("Regalos para ", "").strip()
         if storage.exists(persona):
             regalos = storage.get(persona)['regalos']
