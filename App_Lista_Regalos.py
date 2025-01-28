@@ -295,7 +295,7 @@ class Pantalla_Aniadir_Lista_Personas(Screen):
                     break
             storage.put("personas", lista=personas)
 
-
+# falta quitar esta linea
     def CambiarVolver(self, instance):
         self.manager.current = "inicio"
 
