@@ -294,7 +294,6 @@ class Pantalla_Aniadir_Lista_Personas(Screen):
                     persona["progreso"] = barra_progreso.value
                     break
             storage.put("personas", lista=personas)
-#z
 
     def CambiarVolver(self, instance):
         self.manager.current = "inicio"
