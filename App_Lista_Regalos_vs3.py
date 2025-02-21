@@ -17,7 +17,6 @@ from kivy.base import EventLoop
 from kivy.utils import platform
 from kivy.core.window import Window
 
-
 storage = JsonStore("lista_regalos.jason")
 
 
@@ -271,7 +270,7 @@ class Editar_Personas(Screen):
         self.layout = BoxLayout(orientation = 'vertical', padding = (10, 20,10,10), spacing = 20)
         self.add_widget(self.layout)
 
-        self.persona_label = Label(text = f"Regalos para {self.persona_nombre}", size_hint = (1, 0.1), font_size = "30sp", color = (0,0,0,1 ), size_hint_y = 0.2,font_name="Roboto-Bold.ttf")
+        self.persona_label = Label(text = f"Regalos para {self.persona_nombre}", size_hint = (1, 0.1), font_size = "30sp", color = (0,0,0,1 ), size_hint_y = 0.2)
         self.layout.add_widget(self.persona_label)
 
         regalo_pasado_layout = BoxLayout(size_hint = (1,0.2), spacing = 10, height = 80) #Falta ajusta el como se ve en la interfaz
