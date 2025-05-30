@@ -52,7 +52,7 @@ python App_Lista_Regalos_vs3.py
 
 ## 💖 Dedicado a
 
-Esta app fue creada con mucho cariño para mi querida novia **Julia** 💕, ¡espero que te guste y que podamos usarla juntos muchas navidades más!
+Esta app fue creada con mucho cariño para mi amada novia **Julia** 💕, ¡espero que te guste y que podamos usarla juntos muchas navidades más!
 
 ## 👨‍💻 Autor
 
