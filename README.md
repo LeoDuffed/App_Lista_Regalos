@@ -61,5 +61,3 @@ Leo (con ayuda de ChatGPT 🤖)
 ---
 
 ¡Felices fiestas y que no se te olvide ningún regalo! 🎄🎁
-
-hola
